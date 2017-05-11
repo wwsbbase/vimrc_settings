@@ -1,2 +1,2 @@
 # vimrc_settings
-my own vim settings
+it's my own various vimrc settings
