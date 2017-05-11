@@ -1,0 +1,87 @@
+
+" 定义快捷键到行首和行尾
+nmap lb 0
+nmap le $
+
+" 设置快捷键将选中文本块复制至系统剪贴板
+vnoremap ;y "+y
+" 设置快捷键将系统剪贴板内容粘贴至 vim
+nmap ;p "+p
+
+" 定义快捷键关闭当前分割窗口
+nmap ;q :q<CR>
+" 定义快捷键保存当前窗口内容
+nmap ;w :w<CR>
+" 定义快捷键保存所有窗口内容并退出 vim
+nmap ;WQ :wa<CR>:q<CR>
+" 不做任何保存，直接退出 vim
+nmap ;Q :qa!<CR>
+
+" 定义快捷键在结对符之间跳转，助记pair
+nmap ;pa %
+
+" 定义快捷键跳到下一个窗口
+nmap ;nw :vsc Window.NextDocumentWindow<Enter>
+
+" 注释当前行
+nmap ;cc :vsc Edit.CommentSelection<Enter>
+" 反注释当前行
+nmap ;cu :vsc Edit.UncommentSelection<Enter>
+
+" 查找
+nmap ;sf :vsc VAssistX.FindReferences<Enter>
+nmap ;ss :vsc VAssistX.FindSymbolDialog<Enter>
+
+nmap ;n :vsc VAssistX.FindNextbyContext<Enter>
+nmap ;p :vsc VAssistX.FindPreviousbyContext<Enter>
+
+" 定义代码移动
+nmap gh :vsc VAssistX.GotoImplementation<Enter>
+nmap gb :vsc VAssistX.NavigateBack<Enter>
+nmap gt :vsc VAssistX.NavigateForward<Enter>
+
+" LUA 插件相关
+nmap lsf :vsc Lua.Search<Enter>
+nmap lgh :vsc Lua.GoToDefinitionF12<Enter>
+nmap lss :vsc Lua.GoTosymbol<Enter>
+nmap lso :vsc Lua.FindFile<Enter>
+
+" 编译当前solution
+" 编译
+" nmap ;b :build<Enter>
+nmap ;b :vsc Build.BuildSolution<Enter>
+" 重新编译
+nmap ;rb :vsc Build.ReBuildSolution<Enter>
+" 取消编译
+nmap ;sb :vsc Build.Cancel<Enter>
+
+" 调试当前solution
+
+" nmap ;r :debug<Enter>
+nmap ;r :vsc Debug.Start<Enter>
+" 停止当前Debug
+nmap ;ds :vsc Debug.StopDebugging<Enter>
+" 设置断点
+nmap bp :vsc Debug.ToggleBreakpoint<Enter>
+" Debug StepInto F11
+nmap di :vsc Debug.StepInto<Enter>
+" Debug StepOut Shift+F11
+nmap do :vsc Debug.StepOut<Enter>
+" Debug StepOver F10
+nmap f :vsc Debug.StepOver<Enter>
+" Debug Print F10
+nmap dp :vsc Debug.Print
+
+" 附加到进程
+nmap ;t :vsc Debug.AttachToProcess<Enter>
+
+" jumps to next error 
+nmap ;ern :ern<Enter>
+" jumps to previous error 
+nmap ;erp :erp<Enter>
+" brings up the VS Find dialog 
+nmap ;fd :fd<Enter>
+
+
+
+
