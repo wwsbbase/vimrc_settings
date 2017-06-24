@@ -115,8 +115,8 @@ set matchpairs+=<:>                                               " specially fo
 
 
 " 是否生成bak文件，设置bak文件的地址
-" set nobackup
-set backupdir=$vim/TempBak
+ set nobackup
+"set backupdir=$vim/TempBak
 
 " Default Indentation
 set autoindent
@@ -210,7 +210,8 @@ if has('gui_running') || has ('win32')
 	"colorscheme solarized
 	colorscheme molokai
 else
-	colorscheme phd
+	"colorscheme phd
+	colorscheme molokai
 endif 
 set background=dark
 "colorscheme solarized
