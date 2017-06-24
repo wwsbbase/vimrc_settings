@@ -1,4 +1,32 @@
-" 更新时间：2016-03-30 12:15:21
+" 更新时间：2016-11-8 By Bopy
+
+" >>
+" encoding 编码相关
+set encoding=utf-8
+set langmenu=zh_CN.UTF-8
+language message zh_CN.UTF-8
+
+" 去掉utf-8 BOM
+set nobomb
+" 保留utf-8 BOM
+" set bomb
+
+" fileencodings
+set fileencodings=utf-8 
+"set fileencodings=ucs-bom,utf-8,utf-16,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+"set fileencodings=ucs-bom,utf-8,utf-16,gbk,big5,gb18030,latin1
+"set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
+"set encoding=utf-8 fileencodings=ucs-bom,utf-8,cp936
+" <<
+
+" >>
+" 当前工作相关
+" execute project related configuration in current directory
+if filereadable($vim.'/workspace.vim')
+    source $vim/workspace.vim
+endif 
+
+" <<
 
 " 定义快捷键的前缀，即 <Leader>
 let mapleader=";"
@@ -47,14 +75,63 @@ nnoremap <Leader>kw <C-W>k
 " 跳转至下方的子窗口
 nnoremap <Leader>jw <C-W>j
 
-" easier navigation between split windows
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
 
-" 定义快捷键在结对符之间跳转
-nmap <Leader>M %
+
+"set tags=tags
+set tags=./tags,./TAGS,tags,TAGS,./../tags,./../../tags,./../../../tags
+set autochdir
+
+"--------
+" Vim UI
+"--------
+
+
+" highlight current line
+au WinLeave * set nocursorline nocursorcolumn
+au WinEnter * set cursorline cursorcolumn
+set cursorline cursorcolumn
+
+"set highlight 	" conflict with highlight current line
+set smartcase
+
+" editor settings
+set history=1000
+set nocompatible
+set nofoldenable                                                  " disable folding"
+set confirm                                                       " prompt when existing from an unsaved file
+set backspace=indent,eol,start                                    " More powerful backspacing
+set t_Co=256                                                      " Explicitly tell vim that the terminal has 256 colors "
+set mouse=a                                                       " use mouse in all modes
+set report=0                                                      " always report number of lines changed                "
+set scrolloff=5                                                   " 5 lines above/below cursor when scrolling
+set number                                                        " show line numbers
+set showmatch                                                     " show matching bracket (briefly jump)
+set showcmd                                                       " show typed command in status bar
+set title                                                         " show file in titlebar
+set laststatus=2                                                  " use 2 lines for the status bar
+set matchtime=2                                                   " show matching bracket for 0.2 seconds
+set matchpairs+=<:>                                               " specially for html
+" set relativenumber
+
+
+" 是否生成bak文件，设置bak文件的地址
+" set nobackup
+set backupdir=$vim/TempBak
+
+" Default Indentation
+set autoindent
+set smartindent     " indent when
+
+" set textwidth=79
+" set smarttab
+
+" syntax support
+autocmd Syntax javascript set syntax=jquery   " JQuery syntax support
+" js
+let g:html_indent_inctags = "html,body,head,tbody"
+let g:html_indent_script1 = "inc"
+let g:html_indent_style1 = "inc"
+
 
 " <<
 
@@ -84,10 +161,12 @@ set wildmenu
 " vundle 环境设置
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
+"set rtp+=C:/Vim/vimfiles/bundle/Vundle.vim
 " vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'OmniSharp/omnisharp-vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tomasr/molokai'
 Plugin 'vim-scripts/phd'
@@ -115,6 +194,10 @@ Plugin 'sjl/gundo.vim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'lilydjwg/fcitx.vim'
+Plugin 'skywind3000/asyncrun.vim'
+Plugin 'tpope/vim-dispatch'
+
+
 
 " 插件列表结束
 call vundle#end()
@@ -122,8 +205,16 @@ filetype plugin indent on
 " <<<<
 
 " 配色方案
+
+if has('gui_running') || has ('win32')  
+	"colorscheme solarized
+	colorscheme molokai
+else
+	"colorscheme phd
+	colorscheme molokai
+endif 
 set background=dark
-colorscheme solarized
+"colorscheme solarized
 "colorscheme molokai
 "colorscheme phd
 
@@ -216,7 +307,7 @@ set softtabstop=4
 
 " 缩进可视化插件 Indent Guides
 " 随 vim 自启动
-let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_enable_on_vim_startup=0
 " 从第二层开始可视化显示缩进
 let g:indent_guides_start_level=2
 " 色块宽度
@@ -279,9 +370,9 @@ let g:SignatureMap = {
 " 标签列表
 
 " 设置 tagbar 子窗口的位置出现在主编辑区的左边
-let tagbar_left=1
-" 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag
-nnoremap <Leader>ilt :TagbarToggle<CR>
+"let tagbar_left=1
+" 设置显示／隐藏标签列表子窗口的快捷键。速记：identifier list by tag(tag list)
+nnoremap <Leader>tl :TagbarToggle<CR>
 " 设置标签子窗口的宽度
 let tagbar_width=32
 " tagbar 子窗口中不显示冗余帮助信息
@@ -328,6 +419,8 @@ let g:tagbar_type_cpp = {
 " 代码导航
  
 " 基于标签的代码导航
+nmap gh <C-]>
+nmap gb <C-t>
 
 " 设置插件 indexer 调用 ctags 的参数
 " 默认 --c++-kinds=+p+l，重新设置为 --c++-kinds=+l+p+x+c+d+e+f+g+m+n+s+t+u+v
@@ -340,7 +433,7 @@ nmap <Leader>tn :tnext<CR>
 nmap <Leader>tp :tprevious<CR>
 
 " 基于语义的代码导航
-
+nnoremap <leader>gh :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
 " 只能是 #include 或已打开的文件
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
@@ -353,6 +446,16 @@ nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 " 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
 nnoremap <Leader>sf :CtrlSF<CR>
 nnoremap <Leader>sp :CtrlSF 
+
+let g:ctrlsf_ackprg = '/usr/local/bin/ag'
+if has('gui_running') || has ('win32')  
+	let g:ctrlsf_ackprg = $vim.'/ExternalTools/ag/ag'
+	"通过识别.git .hg .svn 等找到项目的根目录
+	let g:ctrlsf_default_root = 'project+fw'
+	"let g:ctrlsf_default_root = 'cwd'
+endif 
+"let g:ctrlsf_default_root = 'project+fw'
+"let g:ctrlsf_regex_pattern = 1
 
 " <<
 
@@ -464,8 +567,8 @@ nmap <Leader>man :Man 3 <cword><CR>
 " >>
 " 工程文件浏览
 
-" 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list
-nmap <Leader>fl :NERDTreeToggle<CR>
+" 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list  (dir list)
+nmap <Leader>dl :NERDTreeToggle<CR>
 " 设置 NERDTree 子窗口宽度
 let NERDTreeWinSize=30
 " 设置 NERDTree 子窗口位置
@@ -530,3 +633,56 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
 
 " 调用 gundo 树
 nnoremap <Leader>ud :GundoToggle<CR>
+
+" 标签页相关设置
+nnoremap <Leader>f :find 
+nnoremap <Leader>o :tabe 
+nnoremap <S-Tab> :tabn<CR>
+
+" 定义在分割窗口间快速移动
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+
+" 定义快捷键在结对符之间跳转
+nmap <Leader>M %
+
+" 打Lua tag
+nnoremap <silent> <Leader>gt :!LuaCtags<cr>
+
+
+" 映射Alt-0_9快捷键快速选择标签
+for temp in [0,1,2,3,4,5,6,7,8,9]
+	exe 'map <A-' . temp . '> ' . temp . 'gt'
+endfor
+
+function! AutoLoadCTagsAndCScope()
+    let max = 10
+    let dir = './'
+    let i = 0
+    let break = 0
+    while isdirectory(dir) && i < max
+        if filereadable(dir . 'GTAGS')
+            execute 'cs add ' . dir . 'GTAGS ' . glob("`pwd`")
+            let break = 1
+        endif
+        if filereadable(dir . 'cscope.out')
+            execute 'cs add ' . dir . 'cscope.out'
+            let break = 1
+        endif
+        if filereadable(dir . 'tags')
+            execute 'set tags =' . dir . 'tags'
+            let break = 1
+        endif
+        if break == 1
+            execute 'lcd ' . dir
+            break
+        endif
+        let dir = dir . '../'
+        let i = i + 1
+    endwhile
+endf
+nmap <Leader>lt :call AutoLoadCTagsAndCScope()<CR>
+" call AutoLoadCTagsAndCScope()
+" http://vifix.cn/blog/vim-auto-load-ctags-and-cscope.html
