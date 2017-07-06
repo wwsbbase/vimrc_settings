@@ -201,7 +201,8 @@ Plugin 'tpope/vim-dispatch'
 Plugin 'honza/vim-snippets'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'google/yapf'
-Plugin 'davidhalter/jedi-vim'
+"Plugin 'davidhalter/jedi-vim'
+Plugin 'davidhalter/jedi'
 Plugin 'w0rp/ale'
 
 
@@ -442,18 +443,20 @@ nmap <Leader>tn :tnext<CR>
 nmap <Leader>tp :tprevious<CR>
 
 " 基于语义的代码导航
-nnoremap <leader>gh :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap <leader>gh :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>jc :YcmCompleter GoToDeclaration<CR>
 " 只能是 #include 或已打开的文件
 nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
-
+" Python 相关
+nnoremap <leader>gh :YcmCompleter GoTo<CR>
+nnoremap <leader>sf :YcmCompleter GoToReferences<CR>
 " <<
 
 " >>
 " 查找
 
 " 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
-nnoremap <Leader>sf :CtrlSF<CR>
+"nnoremap <Leader>sf :CtrlSF<CR>
 nnoremap <Leader>sp :CtrlSF 
 
 let g:ctrlsf_ackprg = '/usr/local/bin/ag'
