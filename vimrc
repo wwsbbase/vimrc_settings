@@ -719,12 +719,14 @@ function! s:compile_and_run()
     if &filetype == 'c'
         exec "AsyncRun! gcc % -o %<; time ./%<"
     elseif &filetype == 'cpp'
-        exec "AsyncRun! g++ -std=c++11 % -o %<; time ./%<"
+        exec "AsyncRun! clang++ -std=c++11 % -o %<; time ./%<"
     elseif &filetype == 'java'
         exec "AsyncRun! javac %; time java %<"
     elseif &filetype == 'sh'
         exec "AsyncRun! time bash %"
     elseif &filetype == 'python'
         exec "AsyncRun! time python %"
+    elseif &filetype == 'lua'
+        exec "AsyncRun! time lua %"
     endif
 endfunction
