@@ -717,7 +717,7 @@ augroup END
 function! s:compile_and_run()
     exec 'w'
     if &filetype == 'c'
-        exec "AsyncRun! gcc % -o %<; time ./%<"
+        exec "AsyncRun! clang % -o %<; time ./%<"
     elseif &filetype == 'cpp'
         exec "AsyncRun! clang++ -std=c++11 % -o %<; time ./%<"
     elseif &filetype == 'java'
