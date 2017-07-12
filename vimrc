@@ -67,14 +67,13 @@ nmap <Leader>Q :qa!<CR>
 " 依次遍历
 nnoremap nw <C-W><C-W>
 " 跳转至右方的窗口
-nnoremap <Leader>lw <C-W>l
+nnoremap <c-l> <c-w>l
 " 跳转至方的窗口
-nnoremap <Leader>hw <C-W>h
+nnoremap <c-h> <c-w>h
 " 跳转至上方的子窗口
-nnoremap <Leader>kw <C-W>k
+nnoremap <c-k> <c-w>k
 " 跳转至下方的子窗口
-nnoremap <Leader>jw <C-W>j
-
+nnoremap <c-j> <c-w>j
 
 
 "set tags=tags
@@ -606,8 +605,8 @@ let NERDTreeAutoDeleteBuffer=1
 map <Leader>bl :MBEToggle<cr>
 
 " buffer 切换快捷键
-map <C-n> :MBEbn<cr>
-map <C-b> :MBEbp<cr>
+map <Leader>en :MBEbn<cr>
+map <Leader>ep :MBEbp<cr>
 
 " <<
 
@@ -633,8 +632,8 @@ map <leader>rs :source my.vim<cr>
 " <<
  
 " 设置快捷键实现一键编译及运行
-nmap <Leader>m :wa<CR> :cd build/<CR> :!rm -rf main<CR> :!cmake CMakeLists.txt<CR>:make<CR><CR> :cw<CR> :cd ..<CR>
-nmap <Leader>g :wa<CR>:cd build/<CR>:!rm -rf main<CR>:!cmake CMakeLists.txt<CR>:make<CR><CR>:cw<CR>:cd ..<CR>:!build/main<CR>
+" nmap <Leader>m :wa<CR> :cd build/<CR> :!rm -rf main<CR> :!cmake CMakeLists.txt<CR>:make<CR><CR> :cw<CR> :cd ..<CR>
+" nmap <Leader>g :wa<CR>:cd build/<CR>:!rm -rf main<CR>:!cmake CMakeLists.txt<CR>:make<CR><CR>:cw<CR>:cd ..<CR>:!build/main<CR>
 
 " >>
 " 快速选中结对符内的文本
@@ -656,14 +655,8 @@ nnoremap <Leader>f :find
 nnoremap <Leader>o :tabe 
 nnoremap <S-Tab> :tabn<CR>
 
-" 定义在分割窗口间快速移动
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-
 " 定义快捷键在结对符之间跳转
-nmap <Leader>M %
+" nmap <Leader>M %
 
 " 打Lua tag
 nnoremap <silent> <Leader>gt :!LuaCtags<cr>
