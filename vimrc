@@ -205,6 +205,13 @@ Plugin 'davidhalter/jedi'
 Plugin 'w0rp/ale'
 
 
+Plugin 'vim-scripts/lua-support'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-lua-ftplugin'
+"Plugin 'xolox/vim-lua-inspect'
+
+
+
 
 " 插件列表结束
 call vundle#end()
@@ -709,17 +716,33 @@ augroup END
 
 function! s:compile_and_run()
     exec 'w'
-    if &filetype == 'c'
-        exec "AsyncRun! clang % -o %<; time ./%<"
-    elseif &filetype == 'cpp'
-        exec "AsyncRun! clang++ -std=c++11 % -o %<; time ./%<"
-    elseif &filetype == 'java'
-        exec "AsyncRun! javac %; time java %<"
-    elseif &filetype == 'sh'
-        exec "AsyncRun! time bash %"
-    elseif &filetype == 'python'
-        exec "AsyncRun! time python %"
-    elseif &filetype == 'lua'
-        exec "AsyncRun! time lua %"
-    endif
+	if has('gui_running')
+		if &filetype == 'c'
+			exec "AsyncRun! clang % -o %<.exe && call ./%<.exe"
+		elseif &filetype == 'cpp'
+			exec "AsyncRun! clang++ -std=c++11 -stdlib=libc++ % -o %<.exe && call %<.exe"
+		elseif &filetype == 'java'
+			exec "AsyncRun! javac % && call java %<"
+		elseif &filetype == 'sh'
+			exec "AsyncRun! call bash %"
+		elseif &filetype == 'python'
+			exec "AsyncRun! call python %"
+		elseif &filetype == 'lua'
+			exec "AsyncRun! call lua %"
+		endif
+	else
+		if &filetype == 'c'
+			exec "AsyncRun! clang % -o %<; time ./%<"
+		elseif &filetype == 'cpp'
+			exec "AsyncRun! clang++ -std=c++11 -stdlib=libc++ % -o %<; time ./%<"
+		elseif &filetype == 'java'
+			exec "AsyncRun! javac %; time java %<"
+		elseif &filetype == 'sh'
+			exec "AsyncRun! time bash %"
+		elseif &filetype == 'python'
+			exec "AsyncRun! time python %"
+		elseif &filetype == 'lua'
+			exec "AsyncRun! time lua %"
+		endif
+	endif
 endfunction
