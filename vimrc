@@ -112,6 +112,10 @@ set matchtime=2                                                   " show matchin
 set matchpairs+=<:>                                               " specially for html
 " set relativenumber
 
+"是否有提示声音
+set noeb
+" 是否有代替Bell的屏幕闪烁
+set vb t_vb=
 
 " 是否生成bak文件，设置bak文件的地址
  set nobackup
