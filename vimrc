@@ -1,4 +1,4 @@
-" 更新时间：2016-11-8 By Bopy
+" 更新时间：2017-8-4 By Bopy
 
 " >>
 " encoding 编码相关
@@ -94,6 +94,12 @@ set cursorline cursorcolumn
 set smartcase
 
 " editor settings
+
+" gvim 打开位置
+winpos 400 235
+" gvim 打开窗口大小
+set lines=35 columns=108 
+
 set history=1000
 set nocompatible
 set nofoldenable                                                  " disable folding"
@@ -209,9 +215,9 @@ Plugin 'davidhalter/jedi'
 Plugin 'w0rp/ale'
 
 
-Plugin 'vim-scripts/lua-support'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-lua-ftplugin'
+"Plugin 'vim-scripts/lua-support'
+"Plugin 'xolox/vim-misc'
+"Plugin 'xolox/vim-lua-ftplugin'
 "Plugin 'xolox/vim-lua-inspect'
 
 
@@ -466,14 +472,15 @@ nnoremap <leader>sf :YcmCompleter GoToReferences<CR>
 " 查找
 
 " 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
-"nnoremap <Leader>sf :CtrlSF<CR>
+let g:ctrlp_cmd='CtrlP :pwd'
+autocmd FileType lua nnoremap <Leader>sf  <Esc>:CtrlSF<CR>
 nnoremap <Leader>sp :CtrlSF 
 
 let g:ctrlsf_ackprg = '/usr/local/bin/ag'
 if has('gui_running') || has ('win32')  
 	let g:ctrlsf_ackprg = $vim.'/ExternalTools/ag/ag'
 	"通过识别.git .hg .svn 等找到项目的根目录
-	let g:ctrlsf_default_root = 'project+fw'
+	"let g:ctrlsf_default_root = 'project+fw'
 	"let g:ctrlsf_default_root = 'cwd'
 endif 
 "let g:ctrlsf_default_root = 'project+fw'
