@@ -472,9 +472,15 @@ nnoremap <leader>sf :YcmCompleter GoToReferences<CR>
 " 查找
 
 " 使用 ctrlsf.vim 插件在工程内全局查找光标所在关键字，设置快捷键。快捷键速记法：search in project
-let g:ctrlp_cmd='CtrlP :pwd'
-autocmd FileType lua nnoremap <Leader>sf  <Esc>:CtrlSF<CR>
+autocmd FileType lua nnoremap <Leader>sf  <Esc>:call SearchForCtrlSF()<CR>
 nnoremap <Leader>sp :CtrlSF 
+
+function! SearchForCtrlSF()
+	"echo "SearchForCtrlSF"
+	let startRun = ":CtrlSF ".expand('<cword>')." ../.."
+	exec(startRun)
+endfunction
+
 
 let g:ctrlsf_ackprg = '/usr/local/bin/ag'
 if has('gui_running') || has ('win32')  
