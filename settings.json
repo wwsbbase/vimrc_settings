@@ -1,0 +1,49 @@
+{
+    // vim 
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.visualstar": true,
+    "vim.cmdLineInitialColon": true,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j","j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.otherModesKeyBindingsNonRecursive": [
+        {
+            "before": ["<leader>","d"],
+            "after": ["d", "d"]
+        },
+        {
+            "before":["<C-n>"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":nohl"
+                }
+            ]
+        },
+        {
+            "before": ["g","h"],
+            "after": ["F12"]
+        },
+        {
+            "before": ["g","l"],
+            "after": [],
+            "commands": [
+                {
+                    "command": ":find"
+                }
+            ]
+        }
+    ],
+    "vim.leader": ";",
+    "vim.handleKeys":{
+        "<C-a>": false,
+        "<C-f>": false
+    }
+}
