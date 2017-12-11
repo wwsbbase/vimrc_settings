@@ -1,0 +1,119 @@
+{
+    // Common
+    "editor.fontSize": 16,
+    // vim 
+    "vim.easymotion": true,
+    "vim.incsearch": true,
+    "vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.visualstar": true,
+    "vim.cmdLineInitialColon": true,
+    "vim.insertModeKeyBindings": [
+        //Bind jj to <Esc> in insert mode:
+        {
+            "before": ["j","j"],
+            "after": ["<Esc>"]
+        }
+    ],
+    "vim.otherModesKeyBindingsNonRecursive": [
+		// navigateForward
+		{
+            "before": ["g","t"],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.navigateForward"
+                }
+            ]
+        },
+		// navigateaBack
+		{
+            "before": ["g","b"],
+            "after":[],
+            "commands": [
+                {
+                    "command": "workbench.action.navigateBack"
+                }
+            ]
+        },
+		// goToDeclaration
+		{
+            "before": ["g","h"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "editor.action.goToDeclaration"
+                }
+            ]
+        },
+        {
+            "before":["<C-n>"],
+            "after":[],
+            "commands": [
+                {
+                    "command": ":nohl"
+                }
+            ]
+        },
+		//findInFiles
+        {
+            "before": ["<leader>","s","p"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.findInFiles"
+                }
+            ]
+        },
+		// findInFilesWithSelectedText (under cursor)
+        {
+            "before": ["<leader>","s","f"],
+            "after": [],
+            "commands": [
+				{
+                    "command": "editor.action.selectHighlights"
+                },
+                {
+                    "command": "workbench.action.findInFilesWithSelectedText"
+                }
+            ]
+        },
+		// add comment
+		{
+            "before": ["<leader>","c","c"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "editor.action.addCommentLine"
+                }
+            ]
+        },
+		// remove comment
+		{
+            "before": ["<leader>","c","u"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "editor.action.removeCommentLine"
+                }
+            ]
+        },
+        //to show the command palette
+        {
+            "before": [":"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.showCommands",
+                    "args": []
+                }
+            ]
+        }
+    ],
+    "vim.leader": ";",
+    "vim.handleKeys":{
+        "<C-a>": false,
+        "<C-f>": false
+    }
+}
