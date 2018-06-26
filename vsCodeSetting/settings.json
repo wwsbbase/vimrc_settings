@@ -1,6 +1,7 @@
 {
     // Common
     "editor.fontSize": 16,
+    "files.autoGuessEncoding": true,
     // vim 
     "vim.easymotion": true,
     "vim.incsearch": true,
@@ -75,7 +76,7 @@
                     "command": "editor.action.selectHighlights"
                 },
                 {
-                    "command": "workbench.action.findInFilesWithSelectedText"
+                    "command": "workbench.action.findInFiles"
                 }
             ]
         },
@@ -99,6 +100,94 @@
                 }
             ]
         },
+		// save the current file
+		{
+            "before": ["<leader>","w"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.files.save"
+                }
+            ]
+        },
+		// debug run
+		{
+            "before": ["<leader>","r"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.debug.continue",
+					 "when": "inDebugMode"
+                }
+            ]
+        },
+		// debug one step (forwoard)
+		{
+            "before": ["f"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.debug.stepOver",
+					 "when": "inDebugMode"
+                }
+            ]
+        },
+		// debug step out
+		{
+            "before": ["q"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.debug.stepOut",
+					 "when": "inDebugMode"
+                }
+            ]
+        },
+		// debug step into
+		{
+            "before": ["z"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.debug.stepInto",
+					 "when": "inDebugMode"
+                }
+            ]
+        },
+		// debug start
+		{
+            "before": ["<leader>", "<leader>", "r"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.debug.start",
+					 "when": "!inDebugMode"
+                }
+            ]
+        },
+		
+		// debug stop
+		{
+            "before": ["<leader>","s","b"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "workbench.action.debug.stop",
+					 "when": "inDebugMode"
+                }
+            ]
+        },
+        //upload current file
+        {
+            "before": ["<leader>","u","p"],
+            "after": [],
+            "commands": [
+                {
+                    "command": "sftp.trans.remote"
+                }
+            ]
+        },
+
         //to show the command palette
         {
             "before": [":"],
@@ -114,6 +203,28 @@
     "vim.leader": ";",
     "vim.handleKeys":{
         "<C-a>": false,
+        "<C-c>": false,
+        "<C-v>": false,
+        "<C-x>": false,
         "<C-f>": false
-    }
+    },
+"sync.gist": "fad535d0397ee24cdd8f106374a94d34",
+"sync.lastUpload": "2018-05-30T09:25:09.600Z",
+"sync.autoDownload": false,
+"sync.autoUpload": false,
+"sync.lastDownload": "2018-05-30T14:29:01.926Z",
+"sync.forceDownload": false,
+"sync.anonymousGist": false,
+"sync.host": "",
+"sync.pathPrefix": "",
+"sync.quietSync": false,
+"sync.askGistName": false,
+"workbench.activityBar.visible": true,
+"workbench.sideBar.location": "left",
+"git.confirmSync": false,
+"sync.removeExtensions": true,
+"sync.syncExtensions": true,
+"git.enableSmartCommit": true,
+"workbench.statusBar.feedback.visible": false,
+"git.autofetch": true
 }

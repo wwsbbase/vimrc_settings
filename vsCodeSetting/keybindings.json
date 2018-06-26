@@ -1,6 +1,6 @@
 // 将键绑定放入此文件中以覆盖默认值
 [
-    { "key": "shift+alt+f",          "command": "workbench.action.findInFilesWithSelectedText",
+    { "key": "shift+alt+f",          "command": "workbench.action.findInFiles",
         "when": "!searchInputBoxFocus" 
     }
 ]
