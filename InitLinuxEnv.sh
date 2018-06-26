@@ -20,6 +20,11 @@ function BaseSetting()
 	# 安装字符集
 	locale-gen en_US.UTF-8
 	mkdir ~/download/
+
+	# 下载各种配置文件
+	cd ~/download/
+	wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
+	unzip master
 }
 
 function ChangeSourcesList()
@@ -94,10 +99,8 @@ function BuildVim()
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 	# get vimrc
-	cd ~/download/
-	wget https://codeload.github.com/wwsbbase/vimrc_settings/zip/master
-
-	unzip master && cd vimrc_settings-master && cp vimrc $HOME/.vimrc
+	cd ~/download/wwsbbase_settings-master
+	cp vimrc $HOME/.vimrc
 }
 
 function BuildYcm()
@@ -116,7 +119,7 @@ function InstallSSR()
 	mv ssr /usr/local/bin
 	chmod +x /usr/local/bin/ssr
 	ssr install
-	cd vimrc_settings-master && cp vimrc $HOME/.vimrc
+	cd wwsbbase_settings-master && cp vimrc $HOME/.vimrc
 
 	ssr start
 }
