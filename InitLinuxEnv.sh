@@ -1,7 +1,7 @@
 #!/bin/bash
-#####		一键初始化Linux			#####
+#####		一键初始化Linux			 #####
 #####		Author:bopy				#####
-#####		Update:2018-06-13		#####
+#####		Update:2018-06-26		#####
 
 function BaseSetting()
 {
@@ -19,9 +19,9 @@ function BaseSetting()
 
 	# 安装字符集
 	locale-gen en_US.UTF-8
-	mkdir ~/download/
 
 	# 下载各种配置文件
+	mkdir ~/download/
 	cd ~/download/
 	wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
 	unzip master
@@ -119,9 +119,34 @@ function InstallSSR()
 	mv ssr /usr/local/bin
 	chmod +x /usr/local/bin/ssr
 	ssr install
-	cd wwsbbase_settings-master && cp vimrc $HOME/.vimrc
+	cd ~/download/wwsbbase_settings-master
 
 	ssr start
+}
+
+function SambaServer()
+{
+
+}
+
+function Aria2Server()
+{
+
+}
+
+function WebServer()
+{
+
+}
+
+function FtpServer()
+{
+
+}
+
+function SetFirewall()
+{
+
 }
 
 function Ubuntu()
