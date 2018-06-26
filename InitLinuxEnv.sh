@@ -126,6 +126,14 @@ function InstallSSR()
 
 function SambaServer()
 {
+	sudo apt-get install samba samba-common-bin
+	配置/etc/samba/smb.conf文件
+	sudo useradd raspsmb && sudo mkdir -p /home/raspsmb/share && sudo chown -R raspsmb:raspsmb /home/raspsmb/
+	sudo smbpasswd -a raspsmb
+
+	设置开机自启动，编辑/etc/rc.loca
+	/etc/init.d/samba restart
+
 
 }
 
@@ -141,6 +149,9 @@ function WebServer()
 
 function FtpServer()
 {
+	sudo apt-get install vsftpd
+	sudo vim /etc/vsftpd.conf
+	sudo service vsftpd restart
 
 }
 
