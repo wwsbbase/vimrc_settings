@@ -150,7 +150,7 @@ function SambaService()
 function Aria2Service()
 {
 	
-
+echo 'Aria2Service:'
 	cd ~/download/
 	mkdir -p /data/download
 
@@ -158,11 +158,13 @@ function Aria2Service()
 
 function WebService()
 {
+	echo 'WebService:'
 
 }
 
 function FtpService()
 {
+	echo 'FtpService:'
 	sudo apt-get install vsftpd
 	sudo vim /etc/vsftpd.conf
 	sudo service vsftpd restart
@@ -171,7 +173,7 @@ function FtpService()
 
 function SetFirewall()
 {
-
+	echo 'SetFirewall:'
 }
 
 function Ubuntu()
