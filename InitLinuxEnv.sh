@@ -53,6 +53,7 @@ function InstallTools()
 	sudo apt-get install -y  unzip
 	sudo apt-get install -y  screen
 	sudo apt-get install -y  dstat
+	sudo apt-get install -y  curl
 
 	# file system
 	sudo apt-get install -y  xfsprogs
@@ -71,6 +72,10 @@ function InstallTools()
 
 	# install for build YCM
 	sudo apt-get install -y  clang-5.0
+
+	# Services
+	sudo apt-get install -y  samba samba-common-bin
+	sudo apt-get install -y  aria2
 }
 
 function BuildVim()
@@ -124,30 +129,39 @@ function InstallSSR()
 	ssr start
 }
 
-function SambaServer()
+function SambaService()
 {
-	sudo apt-get install samba samba-common-bin
-	配置/etc/samba/smb.conf文件
-	sudo useradd raspsmb && sudo mkdir -p /home/raspsmb/share && sudo chown -R raspsmb:raspsmb /home/raspsmb/
-	sudo smbpasswd -a raspsmb
+	sudo mv /etc/samba/smb.conf /etc/samba/smb_bak.conf
 
-	设置开机自启动，编辑/etc/rc.loca
-	/etc/init.d/samba restart
+	# 配置/etc/samba/smb.conf文件
+	cd ~/download/wwsbbase_settings-master
+	sudo cp smb.conf /etc/samba/smb.conf
 
+	sudo mkdir -p /data/download/
+	sudo chown -R bopy:bopy /data/download/
+	sudo smbpasswd -a bopy
+
+	#设置开机自启动，编辑/etc/rc.local
+
+	#重新启动服务
+	sudo /etc/init.d/samba restart
+}
+
+function Aria2Service()
+{
+	
+
+	cd ~/download/
+	mkdir -p /data/download
 
 }
 
-function Aria2Server()
+function WebService()
 {
 
 }
 
-function WebServer()
-{
-
-}
-
-function FtpServer()
+function FtpService()
 {
 	sudo apt-get install vsftpd
 	sudo vim /etc/vsftpd.conf
@@ -184,12 +198,14 @@ function Debian()
 function Raspberry()
 {
 	########## Setting ###########
-	#BaseSetting
+	BaseSetting
 	ChangeSourcesList
 	InstallTools
 	############## Vim ################
 	BuildVim
 	BuildYcm
+
+	SambaService
 }
 
 function CentOS()
@@ -203,6 +219,12 @@ function CentOS()
 
 }
 
+function OneStepFunction()
+{
+	SambaService
+
+}
+
 
 echo '#####		欢迎使用一键初始化Linux脚本^_^	#####'
 echo '----------------------------------'
@@ -210,6 +232,7 @@ echo '请选择系统:'
 echo "1) CentOS 7 X64"
 echo "2) Ubuntu 14+ X64"
 echo "3) Raspberry "
+echo "4) OneStepFunction "
 echo "q) 退出"
 echo '----------------------------------'
 read -p ":" num
@@ -231,6 +254,10 @@ case $num in
 	;;
 	3)
 		Raspberry
+		exit
+	;;
+	4)
+		OneStepFunction
 		exit
 	;;
 	q)
