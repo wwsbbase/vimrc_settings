@@ -139,8 +139,9 @@ function BuildVim()
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 	# get vimrc
-	cd "${operatorFolder}wwsbbase_settings"
-	cp vimrc $HOME/.vimrc
+	# cd "${operatorFolder}wwsbbase_settings"
+	# cp vimrc $HOME/.vimrc
+	sudo cp "${operatorFolder}wwsbbase_settings/vimrc" $HOME/.vimrc
 
 	echo 'BuildVim end'
 	echo '----------------------------------'
@@ -185,8 +186,9 @@ function SambaService()
 	sudo mv /etc/samba/smb.conf /etc/samba/smb_bak.conf
 
 	# 配置/etc/samba/smb.conf文件
-	cd "${operatorFolder}wwsbbase_settings"
-	sudo cp smb.conf /etc/samba/smb.conf
+	# cd "${operatorFolder}wwsbbase_settings"
+	# sudo cp smb.conf /etc/samba/smb.conf
+	sudo cp "${operatorFolder}wwsbbase_settings/smb.conf" /etc/samba/smb.conf
 
 	if [ ! -d "$dataFolder" ]; then
 		sudo mkdir -p "$dataFolder"
@@ -224,7 +226,7 @@ function Aria2Service()
 	sudo touch "${aria2Folder}aria2.session"
 	#启动服务
 	cd /data/aria2
-	nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
+	sudo nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
 
 	echo 'Aria2Service end'
 	echo '----------------------------------'
