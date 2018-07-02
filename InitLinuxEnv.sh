@@ -217,9 +217,9 @@ function Aria2Service()
 		sudo mkdir -p "$aria2Folder"
 	fi
 
-	cd "${operatorFolder}wwsbbase_settings"
-	sudo cp aria2.conf aria2.sh "$aria2Folder"
-	chmod +x "${aria2Folder}aria2.sh"
+	sudo cp "${operatorFolder}wwsbbase_settings/aria2.conf" "$aria2Folder"
+	sudo cp "${operatorFolder}wwsbbase_settings/aria2.sh" "$aria2Folder"
+	sudo chmod +x "${aria2Folder}aria2.sh"
 
 	sudo touch "${aria2Folder}aria2.session"
 	#启动服务
@@ -330,7 +330,7 @@ function CentOS()
 
 function OneStepFunction()
 {
-	echo '########## CentOS ##########'
+	echo '########## OneStepFunction ##########'
 	Aria2Service
 }
 
