@@ -217,11 +217,11 @@ function Aria2Service()
 		sudo mkdir -p "$aria2Folder"
 	fi
 
-	touch "${aria2Folder}aria2.session"
-	cp aria2.conf aria2.sh "$aria2Folder"
-
+	cd "${operatorFolder}wwsbbase_settings"
+	sudo cp aria2.conf aria2.sh "$aria2Folder"
 	chmod +x "${aria2Folder}aria2.sh"
 
+	sudo touch "${aria2Folder}aria2.session"
 	#启动服务
 	cd /data/aria2
 	nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
@@ -270,7 +270,10 @@ function SetFirewall()
 
 function MountDisks()
 {
-
+	echo '----------------------------------'
+	echo 'MountDisks begin'
+	echo 'MountDisks end'
+	echo '----------------------------------'
 }
 
 function Ubuntu()
@@ -328,7 +331,7 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## CentOS ##########'
-	SambaService
+	Aria2Service
 }
 
 
