@@ -5,7 +5,7 @@
 
 
 dataFolder="/data/download/"
-operatorFolder="~/download/"
+operatorFolder="/home/bopy/download/"
 aria2Folder="/data/aria2/"
 
 function BaseSetting()
