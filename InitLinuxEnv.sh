@@ -90,7 +90,7 @@ function FetchConfigs()
 	echo '----------------------------------'
 	echo 'FetchConfigs begin'
 	# 下载各种配置文件
-	mkdir ~/download/
+	mkdir ~/download/	
 	cd ~/download/
 	#wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
 	#unzip master
@@ -198,6 +198,9 @@ function Aria2Service()
 	echo 'Aria2Service begin'
 	cd ~/download/
 	mkdir -p /data/download
+
+
+
 	echo 'Aria2Service end'
 	echo '----------------------------------'
 }
@@ -230,8 +233,14 @@ function SetFirewall()
 	echo '----------------------------------'
 }
 
+function MountDisks()
+{
+
+}
+
 function Ubuntu()
 {
+	echo '########## Ubuntu ##########'
 	########## Setting ###########
 	BaseSetting
 	InstallTools
@@ -244,6 +253,7 @@ function Ubuntu()
 
 function Debian()
 {
+	echo '########## Debian ##########'
 	########## Setting ###########
 	#BaseSetting
 	InstallTools
@@ -255,6 +265,7 @@ function Debian()
 
 function Raspberry()
 {
+	echo '########## Raspberry ##########'
 	########## Setting ###########
 	BaseSetting
 	ChangeSourcesList
@@ -269,6 +280,7 @@ function Raspberry()
 
 function CentOS()
 {
+	echo '########## CentOS ##########'
 	yum install -y git
 	yum install -y screen
 	yum install -y ctags
@@ -280,8 +292,8 @@ function CentOS()
 
 function OneStepFunction()
 {
+	echo '########## CentOS ##########'
 	SambaService
-
 }
 
 
@@ -291,7 +303,7 @@ echo '请选择系统:'
 echo "1) CentOS 7 X64"
 echo "2) Ubuntu 14+ X64"
 echo "3) Raspberry "
-echo "4) OneStepFunction "
+echo "4) OneStepFunction"
 echo "q) 退出"
 echo '----------------------------------'
 read -p ":" num
