@@ -3,6 +3,10 @@
 #####		Author:bopy				#####
 #####		Update:2018-06-26		#####
 
+
+
+datafolder="/data/download/"
+
 function BaseSetting()
 {
 	echo '----------------------------------'
@@ -80,6 +84,7 @@ function InstallTools()
 	# Services
 	sudo apt-get install -y  samba samba-common-bin
 	sudo apt-get install -y  aria2
+	sudo apt-get install -y  nginx
 
 	echo 'InstallTools end'
 	echo '----------------------------------'
@@ -179,8 +184,11 @@ function SambaService()
 	cd ~/download/wwsbbase_settings
 	sudo cp smb.conf /etc/samba/smb.conf
 
-	sudo mkdir -p /data/download/
-	sudo chown -R bopy:bopy /data/download/
+	if [ ! -d "$datafolder" ]; then
+		sudo mkdir -p "$datafolder"
+	fi
+
+	sudo chown -R bopy:bopy "$datafolder"
 	sudo smbpasswd -a bopy
 
 	#设置开机自启动，编辑/etc/rc.local
@@ -196,10 +204,10 @@ function Aria2Service()
 {
 	echo '----------------------------------'
 	echo 'Aria2Service begin'
-	cd ~/download/
-	mkdir -p /data/download
 
-
+	if [ ! -d "$datafolder" ]; then
+		sudo mkdir -p "$datafolder"
+	fi
 
 	echo 'Aria2Service end'
 	echo '----------------------------------'
@@ -209,6 +217,16 @@ function WebService()
 {
 	echo '----------------------------------'
 	echo 'WebService begin'
+
+	#下载
+	cd ~/download/
+	git clone https://github.com/ziahamza/webui-aria2.git
+
+	sudo mv webui-aria2/ /var/www/html/
+
+	sudo /etc/init.d/nginx start
+
+
 	echo 'WebService end'
 	echo '----------------------------------'
 }
