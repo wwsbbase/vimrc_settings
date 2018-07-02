@@ -130,7 +130,7 @@ function BuildVim()
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 	# get vimrc
-	cd ~/download/wwsbbase_settings-master
+	cd ~/download/wwsbbase_settings
 	cp vimrc $HOME/.vimrc
 
 	echo 'BuildVim end'
@@ -161,7 +161,7 @@ function InstallSSR()
 	mv ssr /usr/local/bin
 	chmod +x /usr/local/bin/ssr
 	ssr install
-	cd ~/download/wwsbbase_settings-master
+	cd ~/download/wwsbbase_settings
 
 	ssr start
 
@@ -176,7 +176,7 @@ function SambaService()
 	sudo mv /etc/samba/smb.conf /etc/samba/smb_bak.conf
 
 	# 配置/etc/samba/smb.conf文件
-	cd ~/download/wwsbbase_settings-master
+	cd ~/download/wwsbbase_settings
 	sudo cp smb.conf /etc/samba/smb.conf
 
 	sudo mkdir -p /data/download/
