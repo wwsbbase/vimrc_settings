@@ -1,11 +1,12 @@
 #!/bin/bash
 #####		一键初始化Linux			 #####
 #####		Author:bopy				#####
-#####		Update:2018-06-26		#####
+#####		Update:2018-07-2		#####
 
 
-
-datafolder="/data/download/"
+dataFolder="/data/download/"
+operatorFolder="~/download/"
+aria2Folder="/data/aria2/"
 
 function BaseSetting()
 {
@@ -95,8 +96,11 @@ function FetchConfigs()
 	echo '----------------------------------'
 	echo 'FetchConfigs begin'
 	# 下载各种配置文件
-	mkdir ~/download/	
-	cd ~/download/
+	if [ ! -d "$operatorFolder" ]; then
+		sudo mkdir -p "$operatorFolder"
+	fi
+
+	cd "$operatorFolder"
 	#wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
 	#unzip master
 	git clone https://github.com/wwsbbase/wwsbbase_settings.git
@@ -112,7 +116,7 @@ function BuildVim()
 	echo 'BuildVim begin'
 
 	# get latest vim src code 
-	cd ~/download/
+	cd "$operatorFolder"
 	git clone https://github.com/vim/vim.git
 
 	cd vim
@@ -135,7 +139,7 @@ function BuildVim()
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 	# get vimrc
-	cd ~/download/wwsbbase_settings
+	cd "${operatorFolder}wwsbbase_settings"
 	cp vimrc $HOME/.vimrc
 
 	echo 'BuildVim end'
@@ -160,13 +164,13 @@ function InstallSSR()
 {
 	echo '----------------------------------'
 	echo 'InstallSSR begin'
-	cd ~/download/
+	cd "$operatorFolder"
 	git clone https://github.com/SAMZONG/gfwlist2privoxy.git
 	cd gfwlist2privoxy/
 	mv ssr /usr/local/bin
 	chmod +x /usr/local/bin/ssr
 	ssr install
-	cd ~/download/wwsbbase_settings
+	cd "${operatorFolder}wwsbbase_settings"
 
 	ssr start
 
@@ -181,14 +185,14 @@ function SambaService()
 	sudo mv /etc/samba/smb.conf /etc/samba/smb_bak.conf
 
 	# 配置/etc/samba/smb.conf文件
-	cd ~/download/wwsbbase_settings
+	cd "${operatorFolder}wwsbbase_settings"
 	sudo cp smb.conf /etc/samba/smb.conf
 
-	if [ ! -d "$datafolder" ]; then
-		sudo mkdir -p "$datafolder"
+	if [ ! -d "$dataFolder" ]; then
+		sudo mkdir -p "$dataFolder"
 	fi
 
-	sudo chown -R bopy:bopy "$datafolder"
+	sudo chown -R bopy:bopy "$dataFolder"
 	sudo smbpasswd -a bopy
 
 	#设置开机自启动，编辑/etc/rc.local
@@ -205,9 +209,22 @@ function Aria2Service()
 	echo '----------------------------------'
 	echo 'Aria2Service begin'
 
-	if [ ! -d "$datafolder" ]; then
-		sudo mkdir -p "$datafolder"
+	if [ ! -d "$dataFolder" ]; then
+		sudo mkdir -p "$dataFolder"
 	fi
+
+	if [ ! -d "$aria2Folder" ]; then
+		sudo mkdir -p "$aria2Folder"
+	fi
+
+	touch "${aria2Folder}aria2.session"
+	cp aria2.conf aria2.sh "$aria2Folder"
+
+	chmod +x "${aria2Folder}aria2.sh"
+
+	#启动服务
+	cd /data/aria2
+	nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
 
 	echo 'Aria2Service end'
 	echo '----------------------------------'
@@ -219,7 +236,7 @@ function WebService()
 	echo 'WebService begin'
 
 	#下载
-	cd ~/download/
+	cd "$operatorFolder"
 	git clone https://github.com/ziahamza/webui-aria2.git
 
 	sudo mv webui-aria2/ /var/www/html/

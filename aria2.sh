@@ -1,10 +1,11 @@
 #!/bin/bash
 
 aria2pid=$(pgrep 'aria2c')
+aria2Folder="/data/aria2/"
 
 case $1 in
 	'start')
-		nohup aria2c --conf-path=/data/aria2/aria2.conf > /data/aria2/aria2.log 2>&1 &
+		nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
 		exit
 	;;
 	'stop')
@@ -12,7 +13,7 @@ case $1 in
 	;;
 	'restart')
 		kill -9 ${aria2pid}
-		nohup aria2c --conf-path=/data/aria2/aria2.conf > /data/aria2/aria2.log 2>&1 &
+		nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
 		exit;
 	;;
 	'status')
