@@ -5,6 +5,8 @@
 
 function BaseSetting()
 {
+	echo '----------------------------------'
+	echo 'BaseSetting begin'
 	############# Add User ############
 	#sudo adduser bopy
 	#sudo passwd bopy
@@ -19,16 +21,14 @@ function BaseSetting()
 
 	# 安装字符集
 	locale-gen en_US.UTF-8
-
-	# 下载各种配置文件
-	mkdir ~/download/
-	cd ~/download/
-	wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
-	unzip master
+	echo 'BaseSetting end'
+	echo '----------------------------------'
 }
 
 function ChangeSourcesList()
 {
+	echo '----------------------------------'
+	echo 'ChangeSourcesList begin'
 	# backup 
 	sudo cp /etc/apt/sources.list /etc/apt/sources.list_back 
 	# replace
@@ -43,10 +43,14 @@ function ChangeSourcesList()
 	# update 
 	sudo apt-get update -y
 	sudo apt-get upgrade -y
+	echo 'ChangeSourcesList end'
+	echo '----------------------------------'
 }
 
 function InstallTools()
 {
+	echo '----------------------------------'
+	echo 'InstallTools begin'
 	# install base tools
 	sudo apt-get install -y  git
 	sudo apt-get install -y  wget
@@ -76,10 +80,32 @@ function InstallTools()
 	# Services
 	sudo apt-get install -y  samba samba-common-bin
 	sudo apt-get install -y  aria2
+
+	echo 'InstallTools end'
+	echo '----------------------------------'
+}
+
+function FetchConfigs()
+{
+	echo '----------------------------------'
+	echo 'FetchConfigs begin'
+	# 下载各种配置文件
+	mkdir ~/download/
+	cd ~/download/
+	#wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
+	#unzip master
+	git clone https://github.com/wwsbbase/wwsbbase_settings.git
+	git pull
+
+	echo 'FetchConfigs end'
+	echo '----------------------------------'
 }
 
 function BuildVim()
 {
+	echo '----------------------------------'
+	echo 'BuildVim begin'
+
 	# get latest vim src code 
 	cd ~/download/
 	git clone https://github.com/vim/vim.git
@@ -106,18 +132,29 @@ function BuildVim()
 	# get vimrc
 	cd ~/download/wwsbbase_settings-master
 	cp vimrc $HOME/.vimrc
+
+	echo 'BuildVim end'
+	echo '----------------------------------'
 }
 
 function BuildYcm()
 {
+	echo '----------------------------------'
+	echo 'BuildYcm begin'
+
 	git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
 	cd ~/.vim/bundle/YouCompleteMe
 	git submodule update --init --recursive
 	./install.py --clang-completer
+
+	echo 'BuildYcm end'
+	echo '----------------------------------'
 }
 
 function InstallSSR()
 {
+	echo '----------------------------------'
+	echo 'InstallSSR begin'
 	cd ~/download/
 	git clone https://github.com/SAMZONG/gfwlist2privoxy.git
 	cd gfwlist2privoxy/
@@ -127,10 +164,15 @@ function InstallSSR()
 	cd ~/download/wwsbbase_settings-master
 
 	ssr start
+
+	echo 'InstallSSR end'
+	echo '----------------------------------'
 }
 
 function SambaService()
 {
+	echo '----------------------------------'
+	echo 'SambaService begin'
 	sudo mv /etc/samba/smb.conf /etc/samba/smb_bak.conf
 
 	# 配置/etc/samba/smb.conf文件
@@ -145,35 +187,47 @@ function SambaService()
 
 	#重新启动服务
 	sudo /etc/init.d/samba restart
+
+	echo 'SambaService end'
+	echo '----------------------------------'
 }
 
 function Aria2Service()
 {
-	
-echo 'Aria2Service:'
+	echo '----------------------------------'
+	echo 'Aria2Service begin'
 	cd ~/download/
 	mkdir -p /data/download
-
+	echo 'Aria2Service end'
+	echo '----------------------------------'
 }
 
 function WebService()
 {
-	echo 'WebService:'
-
+	echo '----------------------------------'
+	echo 'WebService begin'
+	echo 'WebService end'
+	echo '----------------------------------'
 }
 
 function FtpService()
 {
-	echo 'FtpService:'
+	echo '----------------------------------'
+	echo 'FtpService begin'
 	sudo apt-get install vsftpd
 	sudo vim /etc/vsftpd.conf
 	sudo service vsftpd restart
 
+	echo 'FtpService end'
+	echo '----------------------------------'
 }
 
 function SetFirewall()
 {
-	echo 'SetFirewall:'
+	echo '----------------------------------'
+	echo 'SetFirewall begin'
+	echo 'SetFirewall end'
+	echo '----------------------------------'
 }
 
 function Ubuntu()
@@ -181,6 +235,7 @@ function Ubuntu()
 	########## Setting ###########
 	BaseSetting
 	InstallTools
+	FetchConfigs
 	#SSR 
 	InstallSSR
 	############## Vim ################
@@ -192,6 +247,7 @@ function Debian()
 	########## Setting ###########
 	#BaseSetting
 	InstallTools
+	FetchConfigs
 	############## Vim ################
 	#BuildVim
 
@@ -203,6 +259,7 @@ function Raspberry()
 	BaseSetting
 	ChangeSourcesList
 	InstallTools
+	FetchConfigs
 	############## Vim ################
 	BuildVim
 	BuildYcm
