@@ -3,7 +3,8 @@
 aria2pid=$(pgrep 'aria2c')
 aria2Folder="/data/aria2/"
 
-aria2c="sudo -u tv /usr/local/bin/aria2c"
+#aria2c="sudo -u tv /usr/local/bin/aria2c"
+aria2c="sudo -u bopy aria2c"
 
 
 ARIA2C_CONF_FILE="${aria2Folder}aria2.conf" 
