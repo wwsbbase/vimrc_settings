@@ -221,13 +221,15 @@ function Aria2Service()
 	fi
 
 	sudo cp "${operatorFolder}wwsbbase_settings/aria2.conf" "$aria2Folder"
-	sudo cp "${operatorFolder}wwsbbase_settings/aria2.sh" "$aria2Folder"
-	sudo chmod +x "${aria2Folder}aria2.sh"
+	#sudo cp "${operatorFolder}wwsbbase_settings/aria2.sh" "$aria2Folder"
+	sudo cp "${operatorFolder}wwsbbase_settings/aria2.sh" /etc/init.d/
 
 	sudo touch "${aria2Folder}aria2.session"
 	#启动服务
-	cd /data/aria2
-	sudo nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
+	/etc/init.d/aria2.sh start
+
+	#开机启动服务
+	#sudo sed -i 'xxxxxx' /etc/rc.local
 
 	echo 'Aria2Service end'
 	echo '----------------------------------'
