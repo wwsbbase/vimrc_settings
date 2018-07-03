@@ -3,10 +3,14 @@
 #####		Author:bopy				#####
 #####		Update:2018-07-2		#####
 
+
+# 文件夹结构
+sambaFolder="/data/"
 hubFolder="/data/hub/"
-dataFolder="/data/download/"
+downloadFolder="/data/download/"
+
 operatorFolder="/home/bopy/download/"
-aria2Folder="/data/aria2/"
+aria2Folder="/etc/aria2/"
 
 function BaseSetting()
 {
@@ -191,11 +195,11 @@ function SambaService()
 	# sudo cp smb.conf /etc/samba/smb.conf
 	sudo cp "${operatorFolder}wwsbbase_settings/smb.conf" /etc/samba/smb.conf
 
-	if [ ! -d "$dataFolder" ]; then
-		sudo mkdir -p "$dataFolder"
+	if [ ! -d "$sambaFolder" ]; then
+		sudo mkdir -p "$sambaFolder"
 	fi
 
-	sudo chown -R bopy:bopy "$dataFolder"
+	sudo chown -R bopy:bopy "$sambaFolder"
 	sudo smbpasswd -a bopy
 
 	#设置开机自启动，编辑/etc/rc.local
@@ -212,8 +216,8 @@ function Aria2Service()
 	echo '----------------------------------'
 	echo 'Aria2Service begin'
 
-	if [ ! -d "$dataFolder" ]; then
-		sudo mkdir -p "$dataFolder"
+	if [ ! -d "$downloadFolder" ]; then
+		sudo mkdir -p "$downloadFolder"
 	fi
 
 	if [ ! -d "$aria2Folder" ]; then
@@ -277,8 +281,8 @@ function MountDisks()
 {
 	echo '----------------------------------'
 	echo 'MountDisks begin'
-	if [ ! -d "$dataFolder" ]; then
-		sudo mkdir -p "$dataFolder"
+	if [ ! -d "$downloadFolder" ]; then
+		sudo mkdir -p "$downloadFolder"
 	fi
 
 	if [ ! -d "${hubFolder}" ]; then
@@ -297,10 +301,29 @@ function MountDisks()
 		sudo mkdir -p "${hubFolder}disk256"
 	fi
 
-	sudo mount -t xfs /dev/sda1 "$dataFolder"
+	# 手动挂载
+	sudo mount -t xfs /dev/sda1 "$downloadFolder"
 	sudo mount -t xfs /dev/sdb1 "${hubFolder}disk256"
 	sudo mount -t xfs /dev/sdc1 "${hubFolder}disk4ta"
 	sudo mount -t xfs /dev/sdd1 "${hubFolder}disk4tb"
+
+	# 手动卸载
+	sudo umount "${hubFolder}disk4ta"
+	sudo umount "${hubFolder}disk4ta"
+	sudo umount "${hubFolder}disk256"
+	sudo umount "${downloadFolder}"
+
+	# 开机自动挂载
+
+	#UUID=25014b55-b579-4fbf-9fd3-aa0c69315cbd	/data/download	xfs	defaults,noatime	0	0
+	#UUID=8c97abd5-5354-4d53-bf05-22aec040699f	/data/hub/disk256	xfs	defaults,noatime	0	0
+	#UUID=3cf9ed94-a879-42b5-b3c5-489283cd7b34	/data/hub/disk4ta	xfs	defaults,noatime	0	0
+	#UUID=fa578443-441b-42a8-af42-9e86338a0f6a	/data/hub/disk4tb	xfs	defaults,noatime	0	0
+
+
+	#sudo sed -i 'xxxxxx' /etc/fstab
+
+
 
 	echo 'MountDisks end'
 	echo '----------------------------------'

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 aria2pid=$(pgrep 'aria2c')
-aria2Folder="/data/aria2/"
+aria2Folder="/etc/aria2/"
 
 #aria2c="sudo -u tv /usr/local/bin/aria2c"
 aria2c="sudo -u bopy aria2c"
