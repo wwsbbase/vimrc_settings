@@ -1,11 +1,18 @@
 #!/bin/bash
 
 aria2pid=$(pgrep 'aria2c')
-aria2Folder="/data/aria2/"
+aria2Folder="/etc/aria2/"
+
+#aria2c="sudo -u tv /usr/local/bin/aria2c"
+aria2c="sudo -u bopy aria2c"
+
+
+ARIA2C_CONF_FILE="${aria2Folder}aria2.conf" 
+options=" --conf-path=$ARIA2C_CONF_FILE -D " 
 
 case $1 in
 	'start')
-		nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
+		${aria2c} ${options} 
 		exit
 	;;
 	'stop')
@@ -13,7 +20,7 @@ case $1 in
 	;;
 	'restart')
 		kill -9 ${aria2pid}
-		nohup aria2c --conf-path="${aria2Folder}aria2.conf" > "${aria2Folder}aria2.log" 2>&1 &
+		${aria2c} ${options}
 		exit;
 	;;
 	'status')
