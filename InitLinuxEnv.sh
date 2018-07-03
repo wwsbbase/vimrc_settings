@@ -63,6 +63,7 @@ function InstallTools()
 	sudo apt-get install -y  screen
 	sudo apt-get install -y  dstat
 	sudo apt-get install -y  curl
+	sudo apt-get install -y  ntpdate
 
 	# file system
 	sudo apt-get install -y  xfsprogs
