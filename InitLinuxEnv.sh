@@ -3,7 +3,7 @@
 #####		Author:bopy				#####
 #####		Update:2018-07-2		#####
 
-
+hubFolder="/data/hub/"
 dataFolder="/data/download/"
 operatorFolder="/home/bopy/download/"
 aria2Folder="/data/aria2/"
@@ -277,6 +277,31 @@ function MountDisks()
 {
 	echo '----------------------------------'
 	echo 'MountDisks begin'
+	if [ ! -d "$dataFolder" ]; then
+		sudo mkdir -p "$dataFolder"
+	fi
+
+	if [ ! -d "${hubFolder}" ]; then
+		sudo mkdir -p "$hubFolder"
+	fi
+
+	if [ ! -d "${hubFolder}disk4ta" ]; then
+		sudo mkdir -p "${hubFolder}disk4ta"
+	fi
+
+	if [ ! -d "${hubFolder}disk4tb" ]; then
+		sudo mkdir -p "${hubFolder}disk4tb"
+	fi
+
+	if [ ! -d "${hubFolder}disk256" ]; then
+		sudo mkdir -p "${hubFolder}disk256"
+	fi
+
+	sudo mount -t xfs /dev/sda1 "$dataFolder"
+	sudo mount -t xfs /dev/sdb1 "${hubFolder}disk256"
+	sudo mount -t xfs /dev/sdc1 "${hubFolder}disk4ta"
+	sudo mount -t xfs /dev/sdd1 "${hubFolder}disk4tb"
+
 	echo 'MountDisks end'
 	echo '----------------------------------'
 }
@@ -336,7 +361,7 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	Aria2Service
+	MountDisks
 }
 
 
