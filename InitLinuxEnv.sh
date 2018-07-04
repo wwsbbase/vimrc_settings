@@ -315,10 +315,11 @@ function MountDisks()
 
 	# 开机自动挂载
 
-	#UUID=25014b55-b579-4fbf-9fd3-aa0c69315cbd	/data/download	xfs	defaults,noatime	0	0
+	#UUID=36bd26e6-4a05-44da-8113-922d1622aa59	/data/download	xfs	defaults,noatime	0	0
 	#UUID=8c97abd5-5354-4d53-bf05-22aec040699f	/data/hub/disk256	xfs	defaults,noatime	0	0
 	#UUID=3cf9ed94-a879-42b5-b3c5-489283cd7b34	/data/hub/disk4ta	xfs	defaults,noatime	0	0
 	#UUID=fa578443-441b-42a8-af42-9e86338a0f6a	/data/hub/disk4tb	xfs	defaults,noatime	0	0
+	#UUID=25014b55-b579-4fbf-9fd3-aa0c69315cbd	/data/hub/disk1t	xfs	defaults,noatime	0	0
 
 
 	#sudo sed -i 'xxxxxx' /etc/fstab
