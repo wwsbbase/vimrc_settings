@@ -9,7 +9,7 @@
     "vim.useCtrlKeys": true,
     "vim.hlsearch": true,
     "vim.visualstar": true,
-    "vim.cmdLineInitialColon": true,
+    // "vim.cmdLineInitialColon": true,
     "vim.insertModeKeyBindings": [
         //Bind jj to <Esc> in insert mode:
         {
@@ -17,7 +17,7 @@
             "after": ["<Esc>"]
         }
     ],
-    "vim.otherModesKeyBindingsNonRecursive": [
+    "vim.normalModeKeyBindingsNonRecursive": [
 		// navigateForward
 		{
             "before": ["g","t"],
@@ -209,12 +209,12 @@
         "<C-f>": false
     },
 "sync.gist": "fad535d0397ee24cdd8f106374a94d34",
-"sync.lastUpload": "2018-05-30T09:25:09.600Z",
+"sync.lastUpload": "2018-07-05T03:42:58.541Z",
 "sync.autoDownload": false,
 "sync.autoUpload": false,
 "sync.lastDownload": "2018-05-30T14:29:01.926Z",
 "sync.forceDownload": false,
-"sync.anonymousGist": false,
+// "sync.anonymousGist": false,
 "sync.host": "",
 "sync.pathPrefix": "",
 "sync.quietSync": false,
