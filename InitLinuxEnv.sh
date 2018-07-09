@@ -26,7 +26,7 @@ function BaseSetting()
 	sudo hostnamectl set-hostname wwsbbase_Raspberry
 	sudo echo "127.0.1.1   wwsbbase_Raspberry" >> /etc/hosts
 	# set PS1
-	sudo echo "export PS1='\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m`pwd`\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$'" >> $HOME/.bashrc
+	echo "export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\"" >> $HOME/.bashrc
 
 	# 安装字符集
 	locale-gen en_US.UTF-8
