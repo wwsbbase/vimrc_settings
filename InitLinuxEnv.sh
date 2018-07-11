@@ -280,6 +280,40 @@ function SetFirewall()
 {
 	echo '----------------------------------'
 	echo 'SetFirewall begin'
+	if [ -e "/etc/sysconfig/iptables" ]
+	then
+		# 允许访问22端口(SSH)
+		iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+		#允许访问80端口(HTTP)
+		iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+		#允许访问443端口(HTTPS)
+		iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+		#允许访问445端口(SAMBA)
+		iptables -A INPUT -p tcp --dport 445 -j ACCEPT
+		iptables -A INPUT -p tcp --dport 139 -j ACCEPT
+		iptables -A INPUT -p udp --dport 137 -j ACCEPT
+		iptables -A INPUT -p udp --dport 138 -j ACCEPT
+
+
+		#允许访问6800端口（ARIA2）
+		iptables -I INPUT -p tcp --dport 6800 -j ACCEPT
+		# aria2 bt
+		iptables -I INPUT -p tcp --dport 58621 -j ACCEPT
+
+		# remote debug
+		iptables -I INPUT -p tcp --dport 18110 -j ACCEPT
+
+		iptables -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+
+		
+		service iptables save
+		service iptables restart
+	else
+		firewall-cmd --zone=public --add-port=6080/tcp --permanent
+		firewall-cmd --zone=public --add-port=6800/tcp --permanent
+		firewall-cmd --zone=public --add-port=51413/tcp --permanent
+		firewall-cmd --reload
+	fi
 	echo 'SetFirewall end'
 	echo '----------------------------------'
 }
