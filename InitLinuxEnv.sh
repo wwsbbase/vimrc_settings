@@ -251,15 +251,22 @@ function WebService()
 	echo '----------------------------------'
 	echo 'WebService begin'
 
-	#下载
+	#下载 aria2-webui
 	cd "$operatorFolder"
 	git clone https://github.com/ziahamza/webui-aria2.git
 
 	sudo mv webui-aria2/ /var/www/html/
+	sudo chown -R www-data:www-data /var/www/html/webui-aria2/
+
+	#下载 python document
+	cd "$operatorFolder"
+	wget https://docs.python.org/3/archives/python-3.7.0-docs-html.tar.bz2
+	tar -xjvf python-3.7.0-docs-html.tar.bz2
+	
+	sudo mv python-3.7.0-docs-html/ /var/www/html/
+	sudo chown -R www-data:www-data /var/www/html/python-3.7.0-docs-html/
 
 	sudo /etc/init.d/nginx start
-
-
 	echo 'WebService end'
 	echo '----------------------------------'
 }
