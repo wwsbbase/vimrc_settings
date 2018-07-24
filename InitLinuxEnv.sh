@@ -378,6 +378,13 @@ function MountDisks()
 	echo '----------------------------------'
 }
 
+function InstallDB()
+{
+	sudo apt-get install mysql-server
+	sudo mysql -u root
+}
+
+
 function Ubuntu()
 {
 	echo '########## Ubuntu ##########'
