@@ -83,9 +83,18 @@ function InstallTools()
 	sudo apt-get install -y  ctags
 	sudo apt-get install -y  lua5.1
 	sudo apt-get install -y  lua5.1-dev
+
+	sudo apt-get install -y  libncurses5-dev
+
+	# install python 
+	sudo apt-get install -y  python
+	sudo apt-get install -y  python3
+
 	sudo apt-get install -y  python-dev
 	sudo apt-get install -y  python3-dev
-	sudo apt-get install -y  libncurses5-dev
+
+	sudo apt-get install -y  python-pip
+	sudo apt-get install -y  python3-pip
 
 	sudo apt-get install -y  gcc
 	sudo apt-get install -y  cmake
@@ -120,6 +129,21 @@ function FetchConfigs()
 
 	echo 'FetchConfigs end'
 	echo '----------------------------------'
+}
+
+function PythonEnvs()
+{
+	# pip 换源
+	mkdir ~/.pip
+	sudo cp "${operatorFolder}wwsbbase_settings/pip.conf" ~/.pip/pip.conf
+
+	sudo pip install virtualenvwrapper
+	sudo pip3 install virtualenvwrapper
+
+	mkdir ~/.virtualenvs
+	echo "export WORKON_HOME=~/.virtualenvs" >> $HOME/.bashrc
+	echo "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" >> $HOME/.bashrc
+	echo "source /usr/local/bin/virtualenvwrapper.sh" >> $HOME/.bashrc
 }
 
 function BuildVim()
