@@ -17,6 +17,7 @@ downloadFolder="/data/download/"
 
 operatorFolder="/home/bopy/download/"
 aria2Folder="/etc/aria2/"
+wwsbbase_hostname="wwsbbase_defaut"
 
 function BaseSetting()
 {
@@ -29,8 +30,8 @@ function BaseSetting()
 
 	########## Base Setting ###########
 	# set host name
-	sudo hostnamectl set-hostname wwsbbase_Raspberry
-	sudo echo "127.0.1.1   wwsbbase_Raspberry" >> /etc/hosts
+	sudo hostnamectl set-hostname $wwsbbase_hostname
+	sudo echo "127.0.1.1   ${wwsbbase_hostname}" >> /etc/hosts
 	# set PS1
 	echo "export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;30m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\"" >> $HOME/.bashrc
 	sudo echo "export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;37m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\"" >> /root/.bashrc
@@ -488,6 +489,7 @@ echo '----------------------------------'
 case $num in
 	1)
 		#安装
+		wwsbbase_hostname="wwsbbase_hk"
 		CentOS
 		#设置
 		#setting $osip
@@ -495,11 +497,13 @@ case $num in
 	;;
 	2)
 		#安装aria2
+		wwsbbase_hostname="wwsbbase_cd"
 		Ubuntu
 		#setting $osip
 		exit
 	;;
 	3)
+		wwsbbase_hostname="wwsbbase_Raspberry"
 		Raspberry
 		exit
 	;;
