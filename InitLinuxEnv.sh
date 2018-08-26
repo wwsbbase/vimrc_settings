@@ -15,9 +15,10 @@ sambaFolder="/data/"
 hubFolder="/data/hub/"
 downloadFolder="/data/download/"
 
-operatorFolder="/home/bopy/download/"
-aria2Folder="/etc/aria2/"
 wwsbbase_hostname="wwsbbase_defaut"
+wwsbbase_username="bopy"
+operatorFolder="/home/${wwsbbase_username}/download/"
+aria2Folder="/etc/aria2/"
 
 function BaseSetting()
 {
@@ -488,7 +489,7 @@ echo '----------------------------------'
 
 case $num in
 	1)
-		#安装
+		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_hk"
 		CentOS
 		#设置
@@ -496,13 +497,14 @@ case $num in
 		exit
 	;;
 	2)
-		#安装aria2
+		wwsbbase_username="ubuntu"
 		wwsbbase_hostname="wwsbbase_cd"
 		Ubuntu
 		#setting $osip
 		exit
 	;;
 	3)
+		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_Raspberry"
 		Raspberry
 		exit
