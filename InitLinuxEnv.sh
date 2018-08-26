@@ -120,14 +120,13 @@ function FetchConfigs()
 	echo 'FetchConfigs begin'
 	# 下载各种配置文件
 	if [ ! -d "$operatorFolder" ]; then
-		sudo mkdir -p "$operatorFolder"
+		mkdir -p "$operatorFolder"
 	fi
 
 	cd "$operatorFolder"
 	#wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
 	#unzip master
 	git clone https://github.com/wwsbbase/wwsbbase_settings.git
-	git pull
 
 	echo 'FetchConfigs end'
 	echo '----------------------------------'
@@ -206,8 +205,8 @@ function InstallSSR()
 	cd "$operatorFolder"
 	git clone https://github.com/SAMZONG/gfwlist2privoxy.git
 	cd gfwlist2privoxy/
-	mv ssr /usr/local/bin
-	chmod +x /usr/local/bin/ssr
+	sudo mv ssr /usr/local/bin
+	sudo chmod u+x /usr/local/bin/ssr
 	ssr install
 	cd "${operatorFolder}wwsbbase_settings"
 
@@ -229,7 +228,7 @@ function SambaService()
 	sudo cp "${operatorFolder}wwsbbase_settings/smb.conf" /etc/samba/smb.conf
 
 	if [ ! -d "$sambaFolder" ]; then
-		sudo mkdir -p "$sambaFolder"
+		mkdir -p "$sambaFolder"
 	fi
 
 	sudo chown -R bopy:bopy "$sambaFolder"
@@ -422,6 +421,7 @@ function Ubuntu()
 	InstallSSR
 	############## Vim ################
 	BuildVim
+	BuildYcm
 }
 
 function Debian()
@@ -471,7 +471,12 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	MountDisks
+	wwsbbase_username="ubuntu"
+	wwsbbase_hostname="wwsbbase_cd"
+	operatorFolder="/home/${wwsbbase_username}/download/"
+
+	BuildVim
+	BuildYcm
 }
 
 
@@ -491,6 +496,7 @@ case $num in
 	1)
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_hk"
+		operatorFolder="/home/${wwsbbase_username}/download/"
 		CentOS
 		#设置
 		#setting $osip
@@ -499,6 +505,7 @@ case $num in
 	2)
 		wwsbbase_username="ubuntu"
 		wwsbbase_hostname="wwsbbase_cd"
+		operatorFolder="/home/${wwsbbase_username}/download/"
 		Ubuntu
 		#setting $osip
 		exit
@@ -506,6 +513,7 @@ case $num in
 	3)
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_Raspberry"
+		operatorFolder="/home/${wwsbbase_username}/download/"
 		Raspberry
 		exit
 	;;
