@@ -20,6 +20,8 @@ wwsbbase_username="bopy"
 operatorFolder="/home/${wwsbbase_username}/download/"
 aria2Folder="/etc/aria2/"
 
+setCmdColor=""
+
 function BaseSetting()
 {
 	echo '----------------------------------'
@@ -209,6 +211,7 @@ function InstallSSR()
 	sudo chmod u+x /usr/local/bin/ssr
 	ssr install
 	cd "${operatorFolder}wwsbbase_settings"
+	sudo cp "${operatorFolder}wwsbbase_settings/config.json" /usr/local/share/shadowsocksr/config.json
 
 	ssr start
 
@@ -471,12 +474,9 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	wwsbbase_username="ubuntu"
-	wwsbbase_hostname="wwsbbase_cd"
-	operatorFolder="/home/${wwsbbase_username}/download/"
-
-	BuildVim
-	BuildYcm
+	# set PS1
+	echo $setCmdColor >> $HOME/.bashrc
+	sudo echo $setCmdColor >> /root/.bashrc
 }
 
 
@@ -497,6 +497,8 @@ case $num in
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_hk"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		#法国（蓝白红）
+		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		CentOS
 		#设置
 		#setting $osip
@@ -506,6 +508,8 @@ case $num in
 		wwsbbase_username="ubuntu"
 		wwsbbase_hostname="wwsbbase_cd"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		#法国（蓝白红）
+		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		Ubuntu
 		#setting $osip
 		exit
@@ -514,10 +518,14 @@ case $num in
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_Raspberry"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		#树莓派 （红白绿）
+		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;30m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		Raspberry
 		exit
 	;;
 	4)
+		#法国（蓝白红）
+		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		OneStepFunction
 		exit
 	;;
