@@ -78,6 +78,7 @@ function InstallTools()
 	sudo apt-get install -y  dstat
 	sudo apt-get install -y  curl
 	sudo apt-get install -y  ntpdate
+	sudo apt-get install -y  gdisk
 
 	# file system
 	sudo apt-get install -y  xfsprogs
@@ -411,6 +412,13 @@ function InstallDB()
 	sudo mysql -u root
 }
 
+function BuildSwap()
+{
+	sudo dd if=/dev/zero of=/var/swap bs=1G count=8
+	sudo mkswap /var/swap
+	sudo echo "/var/swap swap  swap defaults    0   0" >> /etc/fstab
+}
+
 
 function Ubuntu()
 {
@@ -473,9 +481,7 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	# set PS1
-	echo $setCmdColor >> $HOME/.bashrc
-	sudo echo $setCmdColor >> /root/.bashrc
+	BuildSwap
 }
 
 
