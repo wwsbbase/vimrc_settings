@@ -36,9 +36,8 @@ function BaseSetting()
 	sudo hostnamectl set-hostname $wwsbbase_hostname
 	sudo echo "127.0.1.1   ${wwsbbase_hostname}" >> /etc/hosts
 	# set PS1
-	echo "export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;30m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\"" >> $HOME/.bashrc
-	sudo echo "export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;37m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\"" >> /root/.bashrc
-
+	echo $setCmdColor >> $HOME/.bashrc
+	sudo echo $setCmdColor >> /root/.bashrc
 	# 安装字符集
 	locale-gen en_US.UTF-8
 	echo 'BaseSetting end'
@@ -497,6 +496,7 @@ case $num in
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_hk"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		#法国（蓝白红）
 		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		CentOS
@@ -508,6 +508,7 @@ case $num in
 		wwsbbase_username="ubuntu"
 		wwsbbase_hostname="wwsbbase_cd"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		#法国（蓝白红）
 		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		Ubuntu
@@ -518,6 +519,7 @@ case $num in
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_Raspberry"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		#树莓派 （红白绿）
 		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;30m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		Raspberry
@@ -525,6 +527,7 @@ case $num in
 	;;
 	4)
 		#法国（蓝白红）
+		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		OneStepFunction
 		exit
