@@ -142,16 +142,16 @@ function FetchConfigs()
 function PythonEnvs()
 {
 	# pip 换源
-	mkdir ~/.pip
-	sudo cp "${operatorFolder}wwsbbase_settings/pip.conf" ~/.pip/pip.conf
+	mkdir $userFolder/.pip
+	sudo cp "${operatorFolder}wwsbbase_settings/pip.conf" $userFolder/.pip/pip.conf
 
 	sudo pip install virtualenvwrapper
 	sudo pip3 install virtualenvwrapper
 
-	mkdir ~/.virtualenvs
-	echo "export WORKON_HOME=~/.virtualenvs" >> $HOME/.bashrc
-	echo "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" >> $HOME/.bashrc
-	echo "source /usr/local/bin/virtualenvwrapper.sh" >> $HOME/.bashrc
+	mkdir $userFolder/.virtualenvs
+	echo "export WORKON_HOME=~/.virtualenvs" >> $userFolder/.bashrc
+	echo "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" >> $userFolder/.bashrc
+	echo "source /usr/local/bin/virtualenvwrapper.sh" >> $userFolder/.bashrc
 }
 
 function BuildVim()
@@ -507,8 +507,9 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	BuildVim
-	BuildYcm
+	echo $python_lib_path
+	echo $python3_lib_path
+	PythonEnvs
 }
 
 
@@ -560,8 +561,16 @@ case $num in
 		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 
-		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
-		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		# python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		# python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		python_lib_path=/usr/local/lib/python2.7/dist-packages
+		python3_lib_path=/usr/local/lib/python3.5/dist-packages
+
+
+		python_lib_path=/usr/lib/python2.7/config-x86_64-linux-gnu
+		python3_lib_path=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu
+
+
 		Ubuntu
 		#setting $osip
 		exit
@@ -595,6 +604,12 @@ case $num in
 		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
 		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
 	
+
+		python_lib_path=/usr/local/lib/python2.7/dist-packages
+		python3_lib_path=/usr/local/lib/python3.5/dist-packages
+
+		python_lib_path=/usr/lib/python2.7/config-x86_64-linux-gnu
+		python3_lib_path=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu
 
 		OneStepFunction
 		exit
