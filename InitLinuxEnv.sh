@@ -17,10 +17,15 @@ downloadFolder="/data/download/"
 
 wwsbbase_hostname="wwsbbase_defaut"
 wwsbbase_username="bopy"
+userFolder="/home/${wwsbbase_username}"
 operatorFolder="/home/${wwsbbase_username}/download/"
+
 aria2Folder="/etc/aria2/"
 
-setCmdColor=""
+setRootColor=""
+setUserColor=""
+python_lib_path=""
+python3_lib_path=""
 
 function BaseSetting()
 {
@@ -36,8 +41,8 @@ function BaseSetting()
 	sudo hostnamectl set-hostname $wwsbbase_hostname
 	sudo echo "127.0.1.1   ${wwsbbase_hostname}" >> /etc/hosts
 	# set PS1
-	echo $setCmdColor >> $HOME/.bashrc
-	sudo echo $setCmdColor >> /root/.bashrc
+	echo $setUserColor >> $userFolder/.bashrc
+	sudo echo $setRootColor >> /root/.bashrc
 	# 安装字符集
 	locale-gen en_US.UTF-8
 	echo 'BaseSetting end'
@@ -165,22 +170,32 @@ function BuildVim()
 	make distclean  # if you build Vim before
 	
 	# get python path
-	python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+	# python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
 	#python_lib_path="/usr/lib64/python2.7/config/"
 	
 	# install
-	./configure --with-features=huge --enable-pythoninterp=yes --enable-rubyinterp=yes --enable-luainterp=yes --enable-perlinterp=yes --with-python-config-dir=$python_lib_path --enable-gui=gtk2 --enable-cscope --prefix=/usr/local
+	./configure --with-features=huge \
+	--enable-pythoninterp=yes --with-python-config-dir=$python_lib_path \
+	--enable-python3interp=yes --with-python3-config-dir=$python3_lib_path \
+	--enable-rubyinterp=yes \
+	--enable-luainterp=yes \
+	--enable-perlinterp=yes \
+	--enable-gui=gtk2 \
+	--enable-cscope \
+	--prefix=/usr/local
 	
 	make
 	sudo make install
 
 	# config
-	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+	git clone https://github.com/VundleVim/Vundle.vim.git $userFolder/.vim/bundle/Vundle.vim
+	git clone https://github.com/VundleVim/Vundle.vim.git /root/.vim/bundle/Vundle.vim
 
 	# get vimrc
 	# cd "${operatorFolder}wwsbbase_settings"
 	# cp vimrc $HOME/.vimrc
-	sudo cp "${operatorFolder}wwsbbase_settings/vimrc" $HOME/.vimrc
+	sudo cp "${operatorFolder}wwsbbase_settings/vimrc" $userFolder/.vimrc
+	sudo cp "${operatorFolder}wwsbbase_settings/vimrc" /root/.vimrc
 
 	echo 'BuildVim end'
 	echo '----------------------------------'
@@ -191,8 +206,13 @@ function BuildYcm()
 	echo '----------------------------------'
 	echo 'BuildYcm begin'
 
-	git clone https://github.com/Valloric/YouCompleteMe.git ~/.vim/bundle/YouCompleteMe
-	cd ~/.vim/bundle/YouCompleteMe
+	git clone https://github.com/Valloric/YouCompleteMe.git $userFolder/.vim/bundle/YouCompleteMe
+	cd $userFolder/.vim/bundle/YouCompleteMe
+	git submodule update --init --recursive
+	./install.py --clang-completer
+
+	git clone https://github.com/Valloric/YouCompleteMe.git /root/.vim/bundle/YouCompleteMe
+	cd /root/.vim/bundle/YouCompleteMe
 	git submodule update --init --recursive
 	./install.py --clang-completer
 
@@ -419,19 +439,25 @@ function BuildSwap()
 	sudo echo "/var/swap swap  swap defaults    0   0" >> /etc/fstab
 }
 
+function UserSetting()
+{
+	echo '########## UserSetting ##########'
+}
 
 function Ubuntu()
 {
 	echo '########## Ubuntu ##########'
-	########## Setting ###########
+	########## BaseSetting ###########
 	BaseSetting
 	InstallTools
 	FetchConfigs
-	#SSR 
+	############## SSR ################
 	InstallSSR
 	############## Vim ################
 	BuildVim
 	BuildYcm
+	######### UserSetting #############
+	UserSetting
 }
 
 function Debian()
@@ -481,12 +507,18 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	BuildSwap
+	BuildVim
+	BuildYcm
 }
 
 
 echo '#####		欢迎使用一键初始化Linux脚本^_^	#####'
-echo '----------------------------------'
+echo '#####									  #####'
+echo '#####		请使用 Root账号 进行初始化!!!	#####'
+echo '#####		请使用 Root账号 进行初始化!!!	#####'
+echo '#####		请使用 Root账号 进行初始化!!!	#####'
+echo '#####									  #####'
+echo '---------------------------------------------'
 echo '请选择系统:'
 echo "1) CentOS 7 X64"
 echo "2) Ubuntu 14+ X64"
@@ -501,10 +533,17 @@ case $num in
 	1)
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_hk"
+		userFolder="/home/${wwsbbase_username}"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+		
 		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		#法国（蓝白红）
-		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		
+		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		
 		CentOS
 		#设置
 		#setting $osip
@@ -513,10 +552,16 @@ case $num in
 	2)
 		wwsbbase_username="ubuntu"
 		wwsbbase_hostname="wwsbbase_cd"
+		userFolder="/home/${wwsbbase_username}"
 		operatorFolder="/home/${wwsbbase_username}/download/"
+
 		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		#法国（蓝白红）
-		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+
+		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
 		Ubuntu
 		#setting $osip
 		exit
@@ -524,17 +569,33 @@ case $num in
 	3)
 		wwsbbase_username="bopy"
 		wwsbbase_hostname="wwsbbase_Raspberry"
+		userFolder="/home/${wwsbbase_username}"
 		operatorFolder="/home/${wwsbbase_username}/download/"
 		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		#树莓派 （红白绿）
-		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;30m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;37m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;31m\u\e[m\e[1;30m@\e[m\e[1;32m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+
+		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
 		Raspberry
 		exit
 	;;
 	4)
+		wwsbbase_username="ubuntu"
+		wwsbbase_hostname="wwsbbase_cd"
+		userFolder="/home/${wwsbbase_username}"
+		operatorFolder="/home/${wwsbbase_username}/download/"
 		#法国（蓝白红）
 		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
-		setCmdColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+
+
+		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
+	
+
 		OneStepFunction
 		exit
 	;;
