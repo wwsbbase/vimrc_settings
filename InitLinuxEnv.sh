@@ -220,6 +220,20 @@ function BuildYcm()
 	echo '----------------------------------'
 }
 
+function InstallZlua()
+{
+	echo '----------------------------------'
+	echo 'InstallZlua begin'
+	cd "$operatorFolder"
+	git clone https://github.com/skywind3000/z.lua.git
+
+	echo "eval "$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)"" >> $userFolder/.bashrc
+	sudo echo "eval "$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)"" >> /root/.bashrc
+
+	echo 'InstallZlua end'
+	echo '----------------------------------'
+}
+
 function InstallSSR()
 {
 	echo '----------------------------------'
@@ -509,9 +523,7 @@ function CentOS()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	echo $python_lib_path
-	echo $python3_lib_path
-	PythonEnvs
+	InstallZlua
 }
 
 
