@@ -227,8 +227,8 @@ function InstallZlua()
 	cd "$operatorFolder"
 	git clone https://github.com/skywind3000/z.lua.git
 
-	echo "eval "$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)"" >> $userFolder/.bashrc
-	sudo echo "eval "$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)"" >> /root/.bashrc
+	echo "eval \"\$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)\"" >> $userFolder/.bashrc
+	echo "eval \"\$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)\"" >> /root/.bashrc
 
 	echo 'InstallZlua end'
 	echo '----------------------------------'
