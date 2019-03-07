@@ -474,6 +474,7 @@ function Ubuntu()
 	BuildYcm
 	######### UserSetting #############
 	UserSetting
+	InstallZlua
 }
 
 function Debian()
@@ -499,7 +500,9 @@ function Raspberry()
 	############## Vim ################
 	BuildVim
 	BuildYcm
-
+	############## Tools ################
+	InstallZlua
+	############## Service ################
 	SambaService
 	Aria2Service
 
@@ -536,7 +539,7 @@ echo '#####									  #####'
 echo '---------------------------------------------'
 echo '请选择系统:'
 echo "1) CentOS 7 X64"
-echo "2) Ubuntu 14+ X64"
+echo "2) Ubuntu 18+ X64"
 echo "3) Raspberry "
 echo "4) OneStepFunction"
 echo "q) 退出"
@@ -613,17 +616,6 @@ case $num in
 		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
-
-
-		python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
-		python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
-	
-
-		python_lib_path=/usr/local/lib/python2.7/dist-packages
-		python3_lib_path=/usr/local/lib/python3.5/dist-packages
-
-		python_lib_path=/usr/lib/python2.7/config-x86_64-linux-gnu
-		python3_lib_path=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu
 
 		OneStepFunction
 		exit
