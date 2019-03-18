@@ -37,22 +37,33 @@ function BaseSetting()
 	#sudo visudo
 
 	########## Base Setting ###########
-	# set host name
-	sudo hostnamectl set-hostname $wwsbbase_hostname
-	sudo echo "127.0.1.1   ${wwsbbase_hostname}" >> /etc/hosts
-	# set PS1
-	echo $setUserColor >> $userFolder/.bashrc
-	sudo echo $setRootColor >> /root/.bashrc
+	ChangeHostname
+	ChangeConsoleColor
+
 	# 安装字符集
 	locale-gen en_US.UTF-8
 	echo 'BaseSetting end'
 	echo '----------------------------------'
 }
 
-function ChangeSourcesList()
+function ChangeHostname()
+{
+	# set host name
+	sudo hostnamectl set-hostname $wwsbbase_hostname
+	sudo echo "127.0.1.1   ${wwsbbase_hostname}" >> /etc/hosts
+}
+
+function ChangeConsoleColor()
+{
+	# set PS1
+	echo $setUserColor >> $userFolder/.bashrc
+	sudo echo $setRootColor >> /root/.bashrc
+}
+
+function ChangePiSources()
 {
 	echo '----------------------------------'
-	echo 'ChangeSourcesList begin'
+	echo 'ChangePiSources begin'
 	# backup 
 	sudo cp /etc/apt/sources.list /etc/apt/sources.list_back 
 	# replace
@@ -67,7 +78,7 @@ function ChangeSourcesList()
 	# update 
 	sudo apt-get update -y
 	sudo apt-get upgrade -y
-	echo 'ChangeSourcesList end'
+	echo 'ChangePiSources end'
 	echo '----------------------------------'
 }
 
@@ -75,6 +86,16 @@ function InstallTools()
 {
 	echo '----------------------------------'
 	echo 'InstallTools begin'
+	InstallBaseTools
+	InstallAdvanceTools
+	echo 'InstallTools end'
+	echo '----------------------------------'
+}
+
+function InstallBaseTools()
+{
+	echo '----------------------------------'
+	echo 'InstallBaseTools begin'
 	# install base tools
 	sudo apt-get install -y  git
 	sudo apt-get install -y  wget
@@ -85,15 +106,30 @@ function InstallTools()
 	sudo apt-get install -y  ntpdate
 	sudo apt-get install -y  gdisk
 
-	# file system
-	sudo apt-get install -y  xfsprogs
-
 	# install for building Vim
+	sudo apt-get install -y  gcc
+	sudo apt-get install -y  cmake
+	sudo apt-get install -y  build-essential
+
 	sudo apt-get install -y  ctags
 	sudo apt-get install -y  lua5.1
 	sudo apt-get install -y  lua5.1-dev
-
 	sudo apt-get install -y  libncurses5-dev
+
+	# install for build YCM
+	sudo apt-get install -y  clang-5.0
+
+	echo 'InstallBaseTools end'
+	echo '----------------------------------'
+}
+
+function InstallAdvanceTools()
+{
+	echo '----------------------------------'
+	echo 'InstallAdvanceTools begin'
+
+	# file system
+	sudo apt-get install -y  xfsprogs
 
 	# install python 
 	sudo apt-get install -y  python
@@ -105,22 +141,16 @@ function InstallTools()
 	sudo apt-get install -y  python-pip
 	sudo apt-get install -y  python3-pip
 
-	sudo apt-get install -y  gcc
-	sudo apt-get install -y  cmake
-	sudo apt-get install -y  build-essential
-
-	# install for build YCM
-	sudo apt-get install -y  clang-5.0
-
 	# Services
 	sudo apt-get install -y  samba samba-common-bin
 	sudo apt-get install -y  aria2
 	sudo apt-get install -y  nginx
 
-	echo 'InstallTools end'
+	echo 'InstallAdvanceTools end'
 	echo '----------------------------------'
 }
 
+# 重新获取一份配置，方便其他服务从固定位置获取配置
 function FetchConfigs()
 {
 	echo '----------------------------------'
@@ -494,7 +524,7 @@ function Raspberry()
 	echo '########## Raspberry ##########'
 	########## Setting ###########
 	BaseSetting
-	ChangeSourcesList
+	ChangePiSources
 	InstallTools
 	FetchConfigs
 	############## Vim ################
@@ -523,6 +553,21 @@ function CentOS()
 
 }
 
+function Vps4Gfw()
+{
+	echo '########## Vps4Gfw ##########'
+	########## BaseSetting ###########
+	ChangeConsoleColor
+	InstallBaseTools
+	FetchConfigs
+	############## Vim ################
+	BuildVim
+	BuildYcm
+	######### UserSetting #############
+	UserSetting
+	InstallZlua	
+}
+
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
@@ -541,7 +586,8 @@ echo '请选择系统:'
 echo "1) CentOS 7 X64"
 echo "2) Ubuntu 18+ X64"
 echo "3) Raspberry "
-echo "4) OneStepFunction"
+echo "4) VPS_GCP"
+echo "5) OneStepFunction"
 echo "q) 退出"
 echo '----------------------------------'
 read -p ":" num
@@ -608,6 +654,18 @@ case $num in
 		exit
 	;;
 	4)
+		wwsbbase_username="bopy_aaron"
+		userFolder="/home/${wwsbbase_username}"
+		operatorFolder="/home/${wwsbbase_username}/download/"
+		#法国（蓝白红）
+		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
+		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+
+		Vps4Gfw
+		exit
+	;;
+	5)
 		wwsbbase_username="ubuntu"
 		wwsbbase_hostname="wwsbbase_cd"
 		userFolder="/home/${wwsbbase_username}"
