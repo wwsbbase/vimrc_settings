@@ -1,0 +1,51 @@
+### This file is an example authorization file for svnserve.
+### Its format is identical to that of mod_authz_svn authorization
+### files.
+### As shown below each section defines authorizations for the path and
+### (optional) repository specified by the section name.
+### The authorizations follow. An authorization line can refer to:
+###  - a single user,
+###  - a group of users defined in a special [groups] section,
+###  - an alias defined in a special [aliases] section,
+###  - all authenticated users, using the '$authenticated' token,
+###  - only anonymous users, using the '$anonymous' token,
+###  - anyone, using the '*' wildcard.
+###
+### A match can be inverted by prefixing the rule with '~'. Rules can
+### grant read ('r') access, read-write ('rw') access, or no access
+### ('').
+
+[aliases]
+# joe = /C=XZ/ST=Dessert/L=Snake City/O=Snake Oil, Ltd./OU=Research Institute/CN=Joe Average
+
+[groups]
+g_db = dw,zdj
+g_client = hy,zdj,spj,lvlei,lf
+g_server = hy,zdj,spj,lvlei,lf
+g_game = hy,zdj,spj,lvlei,lf
+g_doc = hy,zdj,spj,lvlei,lf,dw
+g_tools = hy,zdj,spj,lvlei,lf,dw
+
+[repository:project/db]
+@g_db = rw
+* =
+
+[repository:project/client]
+@g_client = rw
+
+[repository:project/server]
+@g_server = rw
+
+[repository:project/game]
+@g_game = rw
+
+[repository:project/doc]
+@g_doc = rw
+
+[repository:project/tools]
+@g_tools = rw
+
+
+
+
+
