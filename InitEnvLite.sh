@@ -73,7 +73,14 @@ function InstallBaseTools()
 	sudo apt-get install -y  curl
 	sudo apt-get install -y  ntpdate
 	sudo apt-get install -y  gdisk
+	echo 'InstallBaseTools end'
+	echo '----------------------------------'
+}
 
+function InstallVimTools()
+{
+	echo '----------------------------------'
+	echo 'InstallVimTools begin'
 	# install for building Vim
 	sudo apt-get install -y  gcc
 	sudo apt-get install -y  cmake
@@ -87,7 +94,7 @@ function InstallBaseTools()
 	# install for build YCM
 	sudo apt-get install -y  clang-5.0
 
-	echo 'InstallBaseTools end'
+	echo 'InstallVimTools end'
 	echo '----------------------------------'
 }
 
@@ -154,6 +161,8 @@ function PythonEnvs()
 
 function BuildVim()
 {
+	InstallVimTools
+
 	echo '----------------------------------'
 	echo 'BuildVim begin'
 
@@ -282,18 +291,16 @@ function Ubuntu()
 	SambaServic
 }
 
-
-
-function Vps4Gfw()
+function Ubuntu_Lite()
 {
-	echo '########## Vps4Gfw ##########'
+	echo '########## Ubuntu_Lite ##########'
 	########## BaseSetting ###########
-	ChangeConsoleColor
+	BaseSetting
 	InstallBaseTools
 	FetchConfigs
 	############## Vim ################
-	BuildVim
-	BuildYcm
+	# BuildVim
+	# BuildYcm
 	######### UserSetting #############
 	UserSetting
 	InstallZlua	
@@ -315,7 +322,7 @@ echo '#####									  #####'
 echo '---------------------------------------------'
 echo '请选择系统:'
 echo "1) Ubuntu 18+ X64"
-echo "2) VPS_GCP"
+echo "2) Ubuntu_Lite 18+ X64"
 echo "3) OneStepFunction"
 echo "q) 退出"
 echo '----------------------------------'
@@ -344,7 +351,7 @@ case $num in
 		exit
 	;;
 	2)
-		wwsbbase_username="bopy_aaron"
+		wwsbbase_username="bopy"
 		userFolder="/home/${wwsbbase_username}"
 		operatorFolder="/home/${wwsbbase_username}/download/"
 		#法国（蓝白红）
@@ -352,7 +359,7 @@ case $num in
 		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 
-		Vps4Gfw
+		Ubuntu_Lite
 		exit
 	;;
 	3)
