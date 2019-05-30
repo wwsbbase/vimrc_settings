@@ -352,6 +352,7 @@ case $num in
 	;;
 	2)
 		wwsbbase_username="bopy"
+		wwsbbase_hostname="ubuntu_Lab"
 		userFolder="/home/${wwsbbase_username}"
 		operatorFolder="/home/${wwsbbase_username}/download/"
 		#法国（蓝白红）
