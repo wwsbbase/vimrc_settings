@@ -84,10 +84,15 @@ function InstallVimTools()
 	# install for building Vim
 	sudo yum groupinstall -y "Development Tools"  
 	sudo yum install -y  cmake
-
 	sudo yum install -y  ctags
+
+	# install lua
 	sudo yum install -y  lua
 	sudo yum install -y  lua-devel
+
+	# install python 
+	sudo yum install -y  python
+	sudo yum install -y  python-devel
 
 	sudo yum install -y	 ncurses
 	sudo yum install -y  ncurses-libs
@@ -108,23 +113,31 @@ function InstallAdvanceTools()
 	# file system
 	sudo yum install -y  xfsprogs
 
-	# install python 
-	sudo yum install -y  python
-	sudo yum install -y  python3
 
-	sudo yum install -y  python-dev
+	sudo yum install -y  python3
 	sudo yum install -y  python3-dev
 
 	sudo yum install -y  python-pip
 	sudo yum install -y  python3-pip
 
+
+	echo 'InstallAdvanceTools end'
+	echo '----------------------------------'
+}
+
+function InstallExtraService()
+{
 	# Services
 	sudo yum install -y  samba samba-common-bin
 	sudo yum install -y  aria2
 	sudo yum install -y  nginx
+}
 
-	echo 'InstallAdvanceTools end'
-	echo '----------------------------------'
+function InstallMariaDB()
+{
+	# 配置源
+	sudo cp "${operatorFolder}wwsbbase_settings/MariaDB.repo" "/etc/yum.repos.d/MariaDB.repo"
+	yum install -y MariaDB-server MariaDB-client
 }
 
 # 重新获取一份配置，方便其他服务从固定位置获取配置
@@ -173,19 +186,18 @@ function BuildVim()
 	git clone https://github.com/vim/vim.git
 
 	cd vim
-
 	git pull
 	# clean 
 	make distclean  # if you build Vim before
 	
 	# get python path
 	# python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
-	#python_lib_path="/usr/lib64/python2.7/config/"
-	
+	python_lib_path="/usr/lib64/python2.7/config/"	
+
 	# install
 	./configure --with-features=huge \
 	--enable-pythoninterp=yes --with-python-config-dir=$python_lib_path \
-	--enable-python3interp=yes --with-python3-config-dir=$python3_lib_path \
+	# --enable-python3interp=yes --with-python3-config-dir=$python3_lib_path \
 	--enable-rubyinterp=yes \
 	--enable-luainterp=yes \
 	--enable-perlinterp=yes \
@@ -311,7 +323,6 @@ function CentOS_Lite()
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	InstallZlua
 }
 
 
@@ -343,11 +354,6 @@ case $num in
 		setRootColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 
-		# python_lib_path=$(python -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
-		# python3_lib_path=$(python3 -c "from distutils.sysconfig import get_python_lib;import sys; sys.exit(get_python_lib())") 
-		python_lib_path=/usr/lib/python2.7/dist-packages
-		python3_lib_path=/usr/lib/python3.6/config-3.6m-x86_64-linux-gnu
-
 		CentOS
 		#setting $osip
 		exit
@@ -366,8 +372,8 @@ case $num in
 		exit
 	;;
 	3)
-		wwsbbase_username="ubuntu"
-		wwsbbase_hostname="wwsbbase_cd"
+		wwsbbase_username="bopy"
+		wwsbbase_hostname="7_Lab"
 		userFolder="/home/${wwsbbase_username}"
 		operatorFolder="/home/${wwsbbase_username}/download/"
 		#法国（蓝白红）
