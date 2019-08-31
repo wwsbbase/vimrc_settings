@@ -198,7 +198,6 @@ function BuildVim()
 	./configure --with-features=huge \
 	--enable-pythoninterp=yes --with-python-config-dir=$python_lib_path \
 	# --enable-python3interp=yes --with-python3-config-dir=$python3_lib_path \
-	--enable-rubyinterp=yes \
 	--enable-luainterp=yes \
 	--enable-perlinterp=yes \
 	--enable-gui=gtk2 \
@@ -303,6 +302,7 @@ function CentOS()
 	InstallZlua
 	############## Service ################
 	# SambaServic
+	InstallMariaDB
 }
 
 function CentOS_Lite()
