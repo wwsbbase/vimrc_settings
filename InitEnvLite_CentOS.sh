@@ -73,6 +73,7 @@ function InstallBaseTools()
 	sudo yum install -y  curl
 	sudo yum install -y  ntpdate
 	sudo yum install -y  gdisk
+	sudo yum install -y	 net-tools
 	echo 'InstallBaseTools end'
 	echo '----------------------------------'
 }
@@ -196,10 +197,10 @@ function BuildVim()
 
 	# install
 	./configure --with-features=huge \
-	--enable-pythoninterp=yes --with-python-config-dir=$python_lib_path \
+	--enable-pythoninterp --with-python-config-dir=$python_lib_path \
 	# --enable-python3interp=yes --with-python3-config-dir=$python3_lib_path \
-	--enable-luainterp=yes \
-	--enable-perlinterp=yes \
+	--enable-luainterp \
+	--enable-perlinterp \
 	--enable-gui=gtk2 \
 	--enable-cscope \
 	--prefix=/usr/local
