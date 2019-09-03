@@ -95,6 +95,12 @@ function InstallVimTools()
 	sudo yum install -y  python
 	sudo yum install -y  python-devel
 
+	# install perl support
+	sudo yum install -y  perl-ExtUtils-ParseXS
+	sudo yum install -y  perl-ExtUtils-CBuilder
+	sudo yum install -y  perl-ExtUtils-Embed
+
+	# install ncurses
 	sudo yum install -y	 ncurses
 	sudo yum install -y  ncurses-libs
 	sudo yum install -y  ncurses-devel
@@ -197,12 +203,14 @@ function BuildVim()
 
 	# install
 	./configure --with-features=huge \
-	--enable-pythoninterp --with-python-config-dir=$python_lib_path \
-	# --enable-python3interp=yes --with-python3-config-dir=$python3_lib_path \
-	--enable-luainterp \
-	--enable-perlinterp \
+	--enable-multibyte \
+	--enable-rubyinterp=yes \
+	--enable-perlinterp=yes \
+	--enable-luainterp=yes \
 	--enable-gui=gtk2 \
 	--enable-cscope \
+	--enable-pythoninterp=yes \
+	--with-python-config-dir=$python_lib_path \
 	--prefix=/usr/local
 	
 	make
