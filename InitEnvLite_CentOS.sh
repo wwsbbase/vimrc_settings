@@ -226,6 +226,7 @@ function BuildVim()
 	sudo cp "${operatorFolder}wwsbbase_settings/vimrc" $userFolder/.vimrc
 	sudo cp "${operatorFolder}wwsbbase_settings/vimrc" /root/.vimrc
 
+	sudo ln -s /usr/local/bin/vim /usr/bin/vim
 	echo 'BuildVim end'
 	echo '----------------------------------'
 }
