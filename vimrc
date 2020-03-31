@@ -174,45 +174,129 @@ set rtp+=~/.vim/bundle/Vundle.vim
 " vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
 call vundle#begin()
 
+" 插件管理
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'OmniSharp/omnisharp-vim'
+
+
+"""""""""""""""""""通用模块""""""""""""""""""""
+
+" solarized主题插件
 Plugin 'altercation/vim-colors-solarized'
+" molokai主题插件
 Plugin 'tomasr/molokai'
+" phd主题插件
 Plugin 'vim-scripts/phd'
+
+" powerline状态栏插件
 Plugin 'Lokaltog/vim-powerline'
-Plugin 'octol/vim-cpp-enhanced-highlight'
+
+
+" 可视化缩进的插件
+"	:IndentGuidesEnable
+"	:IndentGuidesDisable
+"	:IndentGuidesToggle
 Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'derekwyatt/vim-fswitch'
+
+" 标签展示以及快速跳转(增强vim的书签功能)
 Plugin 'kshenoy/vim-signature'
+" 书签功能，用于快速跳转
 Plugin 'vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines'
+" 大纲式导航
 Plugin 'majutsushi/tagbar'
+
+" 全局搜索插件配合 Ag ack
+Plugin 'dyng/ctrlsf.vim'
+
+" 多光标操作
+" 	ctrl+m 选中一个
+" 	ctrl+p 放弃一个, 回到上一个
+" 	ctrl+x 跳过当前选中, 选中下一个
+" 	esc    退出
+Plugin 'terryma/vim-multiple-cursors'
+
+" 快速注释 
+" 	<leader>cc
+" 	<leader>cu
+Plugin 'scrooloose/nerdcommenter'
+
+" 画图
+Plugin 'vim-scripts/DrawIt'
+
+" 树状目录
+" 	ctrl + w + h    光标 focus 左侧树形目录
+" 	ctrl + w + l    光标 focus 右侧文件显示窗口
+" 	ctrl + w + w    光标自动在左右侧窗口切换 #！！！
+" 	ctrl + w + r    移动当前窗口的布局位置
+Plugin 'scrooloose/nerdtree'
+
+" minibuf可以在vim中创建多了小窗口
+Plugin 'fholgado/minibufexpl.vim'
+
+" 快速选择文本对象
+" i', i", i), i], i}, ip and it
+Plugin 'gcmt/wildfire.vim'
+
+" undo 操作树
+Plugin 'sjl/gundo.vim'
+
+" 快速跳转
+Plugin 'Lokaltog/vim-easymotion'
+
+" 实时显示markdown效果
+Plugin 'suan/vim-instant-markdown'
+
+" 在离开或重新进入插入模式时自动记录和恢复每个缓冲区各自的输入法状态
+Plugin 'lilydjwg/fcitx.vim'
+
+" 使用 Vim 8 / NeoVim 的异步机制，让你在后台运行 shell 命令
+Plugin 'skywind3000/asyncrun.vim'
+
+
+
+"""""""""""""""""""编程插件""""""""""""""""""""
+
+" 启动、生成、测试套件
+Plugin 'tpope/vim-dispatch'
+
+" C++关键字高亮插件
+Plugin 'octol/vim-cpp-enhanced-highlight'
+
+" 同名文件快速切换，h和cpp快速切换
+Plugin 'derekwyatt/vim-fswitch'
+
+" tag生成与更新："ctags" 索引生成插件，方便变量、函数的跳转查询
 Plugin 'vim-scripts/indexer.tar.gz'
 Plugin 'vim-scripts/DfrankUtil'
 Plugin 'vim-scripts/vimprj'
-Plugin 'dyng/ctrlsf.vim'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'vim-scripts/DrawIt'
+
+" 自动生成代码块的引擎
 Plugin 'SirVer/ultisnips'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'derekwyatt/vim-protodef'
-Plugin 'scrooloose/nerdtree'
-Plugin 'fholgado/minibufexpl.vim'
-Plugin 'gcmt/wildfire.vim'
-Plugin 'sjl/gundo.vim'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'suan/vim-instant-markdown'
-Plugin 'lilydjwg/fcitx.vim'
-Plugin 'skywind3000/asyncrun.vim'
-Plugin 'tpope/vim-dispatch'
-
-
+" 代码块集合
 Plugin 'honza/vim-snippets'
+
+" 由接口生成实现框架
+Plugin 'derekwyatt/vim-protodef'
+
+
+
+" 自动化补全
+Plugin 'Shougo/deoplete.nvim'
 Plugin 'Shougo/neocomplete.vim'
+
+" 格式化python
 Plugin 'google/yapf'
+
+" python自动补全
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'davidhalter/jedi'
+
+" 代码异步检测插件 ALE
 Plugin 'w0rp/ale'
+
+" C#插件
+Plugin 'OmniSharp/omnisharp-vim'
+" 超级插件 YouCompleteMe
+Plugin 'Valloric/YouCompleteMe'
 
 
 "Plugin 'vim-scripts/lua-support'
