@@ -1,4 +1,4 @@
-" 更新时间：2017-8-4 By Bopy
+" 更新时间：20200331
 
 " >>
 " encoding 编码相关
@@ -250,61 +250,6 @@ Plugin 'lilydjwg/fcitx.vim'
 
 " 使用 Vim 8 / NeoVim 的异步机制，让你在后台运行 shell 命令
 Plugin 'skywind3000/asyncrun.vim'
-
-
-
-"""""""""""""""""""编程插件""""""""""""""""""""
-
-" 启动、生成、测试套件
-Plugin 'tpope/vim-dispatch'
-
-" C++关键字高亮插件
-Plugin 'octol/vim-cpp-enhanced-highlight'
-
-" 同名文件快速切换，h和cpp快速切换
-Plugin 'derekwyatt/vim-fswitch'
-
-" tag生成与更新："ctags" 索引生成插件，方便变量、函数的跳转查询
-Plugin 'vim-scripts/indexer.tar.gz'
-Plugin 'vim-scripts/DfrankUtil'
-Plugin 'vim-scripts/vimprj'
-
-" 自动生成代码块的引擎
-Plugin 'SirVer/ultisnips'
-" 代码块集合
-Plugin 'honza/vim-snippets'
-
-" 由接口生成实现框架
-Plugin 'derekwyatt/vim-protodef'
-
-
-
-" 自动化补全
-Plugin 'Shougo/deoplete.nvim'
-Plugin 'Shougo/neocomplete.vim'
-
-" 格式化python
-Plugin 'google/yapf'
-
-" python自动补全
-"Plugin 'davidhalter/jedi-vim'
-Plugin 'davidhalter/jedi'
-
-" 代码异步检测插件 ALE
-Plugin 'w0rp/ale'
-
-" C#插件
-Plugin 'OmniSharp/omnisharp-vim'
-" 超级插件 YouCompleteMe
-Plugin 'Valloric/YouCompleteMe'
-
-
-"Plugin 'vim-scripts/lua-support'
-"Plugin 'xolox/vim-misc'
-"Plugin 'xolox/vim-lua-ftplugin'
-"Plugin 'xolox/vim-lua-inspect'
-
-
 
 
 " 插件列表结束
