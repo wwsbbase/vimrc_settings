@@ -6,7 +6,7 @@
 # 文件夹结构
 sambaFolder="/data/"
 
-system_hostname="wwsbbase_defaut"
+system_hostname="defaut_hostname"
 system_username="defaut_user"
 
 setUserColor=""
@@ -43,6 +43,7 @@ function ChangeConsoleColor()
 {
 	# set PS1
 	echo $setUserColor >> $userFolder/.bashrc
+	sudo echo $setRootColor >> /root/.bashrc
 }
 
 function InstallTools()

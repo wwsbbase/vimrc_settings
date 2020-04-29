@@ -174,27 +174,45 @@ set rtp+=~/.vim/bundle/Vundle.vim
 " vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
 call vundle#begin()
 
+" 插件管理
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'OmniSharp/omnisharp-vim'
+
+" solarized主题插件
 Plugin 'altercation/vim-colors-solarized'
+" molokai主题插件
 Plugin 'tomasr/molokai'
+" phd主题插件
 Plugin 'vim-scripts/phd'
+
+" powerline状态栏插件
 Plugin 'Lokaltog/vim-powerline'
+" C++关键字高亮插件
 Plugin 'octol/vim-cpp-enhanced-highlight'
+
+" 可视化缩进的插件
 Plugin 'nathanaelkane/vim-indent-guides'
+" 同名文件快速切换，h和cpp快速切换
 Plugin 'derekwyatt/vim-fswitch'
+" 标签展示以及快速跳转(增强vim的书签功能)
 Plugin 'kshenoy/vim-signature'
+" 书签功能，用于快速跳转
 Plugin 'vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines'
+" 大纲式导航
 Plugin 'majutsushi/tagbar'
+
+" tag生成与更新："ctags" 索引生成插件，方便变量、函数的跳转查询
 Plugin 'vim-scripts/indexer.tar.gz'
 Plugin 'vim-scripts/DfrankUtil'
 Plugin 'vim-scripts/vimprj'
+
+" 全局搜索插件配合 Ag ack
 Plugin 'dyng/ctrlsf.vim'
+" 多光标操作
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'vim-scripts/DrawIt'
 Plugin 'SirVer/ultisnips'
-Plugin 'Valloric/YouCompleteMe'
+
 Plugin 'derekwyatt/vim-protodef'
 Plugin 'scrooloose/nerdtree'
 Plugin 'fholgado/minibufexpl.vim'
@@ -213,6 +231,11 @@ Plugin 'google/yapf'
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'davidhalter/jedi'
 Plugin 'w0rp/ale'
+
+" C#插件
+Plugin 'OmniSharp/omnisharp-vim'
+" YouCompleteMe
+Plugin 'Valloric/YouCompleteMe'
 
 
 "Plugin 'vim-scripts/lua-support'
