@@ -1,34 +1,31 @@
 #!/bin/bash
 #####		一键初始化CentOS7		 #####
-#####		Update:2020-5-12		#####
-
-
-# 文件夹结构
-sambaFolder="/data/"
+#####		Update:2020-6-4			#####
 
 system_hostname="defaut_hostname"
 system_username="defaut_user"
-
 setUserColor=""
-python_lib_path=""
-python3_lib_path=""
 
-function BaseSetting()
+ssh_port="177"
+
+###
+# OS_SystemSetting
+###
+function OS_SystemSetting()
 {
 	echo '----------------------------------'
-	echo 'BaseSetting begin'
-	############# Add User ############
-	#sudo adduser defaut_user
-	#sudo passwd defaut_user
-	#sudo visudo
-
+	echo 'OS_SystemSetting begin'
 	########## Base Setting ###########
 	SetHostname
-	SetConsoleColor
+	########## Advance  Setting ###########
+
+	# ChangeIntelP_state
+	SetMaxOpenFiles
+	SetHistory
 
 	# 安装字符集
 	# locale-gen en_US.UTF-8
-	echo 'BaseSetting end'
+	echo 'OS_SystemSetting end'
 	echo '----------------------------------'
 }
 
@@ -37,19 +34,65 @@ function BaseSetting()
 ###
 function SetHostname()
 {
-	sudo hostnamectl set-hostname $system_hostname
-	sudo echo "127.0.1.1   ${system_hostname}" >> /etc/hosts
+	hostnamectl set-hostname $system_hostname
+	echo "127.0.1.1   ${system_hostname}" >> /etc/hosts
+}
+
+###
+# Change Intel P-state
+###
+function ChangeIntelP_state()
+{
+	sed -i '/GRUB_CMDLINE_LINUX/{s/"$//g;s/$/ intel_pstate=disable intel_idle.max_cstate=0 processor.max_cstate=1 idle=poll"/}' /etc/default/grub
+}
+
+###
+# Max open files
+###
+function SetMaxOpenFiles()
+{
+	found=`grep -c "^* soft nproc" /etc/security/limits.conf`
+	if ! [ $found -gt "0" ]
+	then
+cat >> /etc/security/limits.conf << EOF
+* soft nproc 2048
+* hard nproc 16384
+* soft nofile 8192
+* hard nofile 65536
+EOF
+	fi
+}
+
+###
+# Command History
+###
+function SetHistory()
+{
+	found=`grep -c HISTTIMEFORMAT /etc/profile`
+	if ! [ $found -gt "0" ]
+	then
+	echo "export HISTSIZE=2000" >> /etc/profile
+	echo "export HISTTIMEFORMAT='%F %T:'" >> /etc/profile
+	fi
+}
+
+###
+# Add normal user
+###
+function AddNormalUser()
+{
+	groupadd -g 20000 jesonc
+
+	useradd  -g jesonc -u 20000 -s /bin/bash -c "Dev user" -m -d /home/jesonc jesonc
+	echo jesonc.com | passwd --stdin jesonc
 }
 
 
-###
-# Set Console Color
-###
-function SetConsoleColor()
+function OS_OptimizePerformance()
 {
-	# set PS1
-	echo $setUserColor >> $userFolder/.bashrc
-	sudo echo $setRootColor >> /root/.bashrc
+	CloseSelinxServices
+	CloseUnusefulServices
+	SysctlConfig
 }
 
 ###
@@ -57,7 +100,8 @@ function SetConsoleColor()
 ###
 function CloseSelinxServices()
 {
-	/bin/sed -i 's/mingetty tty/mingetty --noclear tty/' /etc/inittab
+	# inittab is no longer used when using systemd.
+	#/bin/sed -i 's/mingetty tty/mingetty --noclear tty/' /etc/inittab
 	/bin/sed -i 's/SELINUX=permissive/SELINUX=disabled/' /etc/selinux/config
 	/bin/sed -i 's/SELINUX=enforcing/SELINUX=disabled/'  /etc/selinux/config
 }
@@ -72,18 +116,6 @@ function CloseUnusefulServices()
 	systemctl disable 'abrt-ccpp'
 }
 
-###
-# Public key
-###
-function SetPublicKey()
-{
-	mkdir /root/.ssh
-	pub_key='ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA4mvukv4f5seBuzrCnCCm1DpSgYw/kvq+XgsUP8mnzUpyaQ6D8BKfbOn6T20tUU/ksiJwSuUQHfw5v9JsnBACto3o/RmId0Ltn4DCq19sSwMP3YJb9dRb8SA/Pc5Xl7MPwPoSYyuY20ztMfo1GBx5N9dDuQ3j1MdKYTY9SdfFwPr0ZQvesKT1ozfQ9HHrcUi1CLJw+irYW9+jU39CsMrrZmCjb/n53gP77Do0lj9TkqXK2SYNdA88cmK2IQJP3LfFWWrwYH01FkImZbt7ODDQ21BqGccLY7xCbsNaniBlT8Mpy4/Wlg1qqnNPxBbw1nrs9A+2MnAfGDHXYhkFC/n6wQ== root@linux.jesonc.net'
-	echo $pub_key >> /root/.ssh/authorized_keys
-	chmod 700 /root/.ssh
-	chmod 600 /root/.ssh/authorized_keys
-	chown -R root:root /root/.ssh
-}
 
 ###
 # Sysctl config 
@@ -122,49 +154,38 @@ fi
 sysctl -p
 }
 
+function OS_ImproveSecurity()
+{
+	SetPublicKey
+	SetSSHConfig
+}
 
 ###
-# Max open files
+# Public key
 ###
-function SetMaxOpenFiles()
+function SetPublicKey()
 {
-	found=`grep -c "^* soft nproc" /etc/security/limits.conf`
-	if ! [ $found -gt "0" ]
-	then
-cat >> /etc/security/limits.conf << EOF
-* soft nproc 2048
-* hard nproc 16384
-* soft nofile 8192
-* hard nofile 65536
-EOF
-	fi
+	mkdir /root/.ssh
+	pub_key='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAEAQC5aglM/I6PjJd6pZBz/h5bUXaiP74CwuqFjVwx+VdEs1DYg6WcvtgNyOMUVuw4Vv9CaCZy/EccRAdBsE9EsdDMmwp9ljK9CcsYGwMM9tVgqG0v0DtqF/4yiSDKFIHHDZLs9PFgPvTX17MxJRFWXZD0lOCYHvepDTOPeUT2VRrWjfMvch97VcGSTeBxgd9gtcul9JQnwhWJjQyVtGdu0s21hn259xykbWfQCa2snW9svaPA0ZvnxODak67PSBb55kz5MI6TUggg58mt+EIAhRYbgun+tP/JWIF0QJ5HKFhh27+Ow8CQoyOBfEGrqSXyLqepgMBIT6qrrdSaiMARdqll5OYCaQ/ZnqbCE17G4OzmMziSceV1WidyyipHT6UqBq2Ug2eh/77dIYeRO/9YzR0KtrQcAAUe0YsZHkB93ivsvSGJNECdJyRDsHpQBQJzXKb19dmmPpleY5iOt8W1MX/Q+F51k6Tk7DOZLa7L+z27QP+ooSyZle8JcWY2MUmAqXTunabT7M5K5GwH35OX/eClKJUzQFfdawx15wj/CdHuj9YRgDycDrE/8SWIYEXdS5EdrAy+UeQ+k24auj/XoWaHAXSoubOghFY9DZ5/u1ZKW2aJx/ZZMcYFTK2Isz1CpRsm+Fc0jvQtN82Q1o6nL54RC+iom+TxeBsvnHZibnJe6Ij71KvmrmpbbJ8L8XJjrPWF0/FtnM3oxWES2U4Dh/Pt6o7cloDw5Ve+LfTvszd2hoPKGsm6qnXjysHMvweqZNJIWn8Rlgy2HITu0iF/PP9DeB6yfsQ/paHCR+i6rLfvs/hJwxJCtRaiije2uUL/i90YwKKzn/GmlJ9IoqUlF33Zt2apdJI2RTu5tNuNhCu1kezVgc3EK2LjmRN4SAKkxcjWRS0PGRX/d6BWb7eROb8qz4S+w62QbK0nCRK5OQeCrhyioc1mVdSWdlpbci0yTS3whB1LFQve3my1cdOVHZCHj1WaqxKX1qimOkgr8DXnhne2AgpmuNYT7TXekdWv27ZwoM4mx7uwhGuGXlEEPJD8bf3oqS7EKhTEAuwXd+jctapPpbIRQrd8v/MaekZas8BVfVnqiO6G3yiEEW0uHXWznMglC8IPGpiUtke4RD/sKseej7D/FDfVY80hzdPDqpVyhJG308RoT10jNLcJn3MtVWGXXF2UeO2/2ZGrOYtQhQzDdjnCB9i5NqZSvKCWOPZQFAYcJBP037hB+20KF7o4GNo0qcmRT0JRMUab5v3erOnEsccsS0DlD5PQ2kFnKNAB/02Q+5csNrVZL4zcwwl8j7w7wq0q6qiP9SdXbeFDAKwiY0D18yQjA5mxS76WnbZsQAtIJR4hdLCDvdr3e6NJ common_key'
+	echo $pub_key >> /root/.ssh/authorized_keys
+	chmod 700 /root/.ssh
+	chmod 600 /root/.ssh/authorized_keys
+	chown -R root:root /root/.ssh
 }
 
 ###
 # ssh config
 ###
-/bin/sed -i 's/.*Port[[:space:]].*$/Port 9922/' /etc/ssh/ssh_config
-/bin/sed -i 's/.*Port[[:space:]].*$/Port 9922/' /etc/ssh/sshd_config
-/bin/sed -i 's/port=\"22\"/port=\"9922\"/' /usr/lib/firewalld/services/ssh.xml 
-firewall-cmd --reload
-
-
-###
-# Command History
-###
-function SetHistory()
+function SetSSHConfig()
 {
-	found=`grep -c HISTTIMEFORMAT /etc/profile`
-	if ! [ $found -gt "0" ]
-	then
-	echo "export HISTSIZE=2000" >> /etc/profile
-	echo "export HISTTIMEFORMAT='%F %T:'" >> /etc/profile
-	fi
+	/bin/sed -i 's/.*Port[[:space:]].*$/Port 9922/' /etc/ssh/ssh_config
+	/bin/sed -i 's/.*Port[[:space:]].*$/Port 9922/' /etc/ssh/sshd_config
+	/bin/sed -i 's/port=\"22\"/port=\"9922\"/' /usr/lib/firewalld/services/ssh.xml 
+	firewall-cmd --reload
 }
 
 
-
-function InstallTools()
+function OS_InstallTools()
 {
 	echo '----------------------------------'
 	echo 'InstallTools begin'
@@ -180,18 +201,18 @@ function InstallBaseTools()
 	echo 'InstallBaseTools begin'
 	# install base tools
 
-	sudo yum install -y  epel-release
-	sudo yum install -y  htop
-	sudo yum install -y  subversion
-	sudo yum install -y  git
-	sudo yum install -y  wget
-	sudo yum install -y  unzip
-	sudo yum install -y  screen
-	sudo yum install -y  dstat
-	sudo yum install -y  curl
-	sudo yum install -y  ntpdate
-	sudo yum install -y  gdisk
-	sudo yum install -y	 net-tools
+	yum install -y  epel-release
+	yum install -y  htop
+	yum install -y  subversion
+	yum install -y  git
+	yum install -y  wget
+	yum install -y  unzip
+	yum install -y  screen
+	yum install -y  dstat
+	yum install -y  curl
+	yum install -y  ntpdate
+	yum install -y  gdisk
+	yum install -y	 net-tools
 	echo 'InstallBaseTools end'
 	echo '----------------------------------'
 }
@@ -202,69 +223,45 @@ function InstallAdvanceTools()
 	echo 'InstallAdvanceTools begin'
 
 	# file system
-	sudo yum install -y  xfsprogs
+	yum install -y  xfsprogs
 
-
-	sudo yum install -y  python3
-	sudo yum install -y  python3-dev
-
-	sudo yum install -y  python-pip
-	sudo yum install -y  python3-pip
-
+	# python3 
+	# yum install -y  python3
+	# yum install -y  python3-dev
+	# yum install -y  python-pip
+	# yum install -y  python3-pip
 
 	echo 'InstallAdvanceTools end'
 	echo '----------------------------------'
 }
 
-function InstallExtraService()
+###
+# User Settings
+###
+function OS_UserSetting()
 {
-	# Services
-	sudo yum install -y  samba samba-common-bin
-	sudo yum install -y  aria2
-	sudo yum install -y  nginx
+	SetConsoleColor
+	InstallZlua
 }
 
-function InstallMariaDB()
+###
+# Set Console Color
+###
+function SetConsoleColor()
 {
-	# 配置源
-	sudo cp "${operatorFolder}wwsbbase_settings/MariaDB.repo" "/etc/yum.repos.d/MariaDB.repo"
-	yum install -y MariaDB-server MariaDB-client
+	#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
+	#法国（蓝白红）
+	setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+
+	# set PS1
+	echo $setUserColor >> $userFolder/.bashrc
+	echo $setRootColor >> /root/.bashrc
 }
 
-# 重新获取一份配置，方便其他服务从固定位置获取配置
-function FetchConfigs()
-{
-	echo '----------------------------------'
-	echo 'FetchConfigs begin'
-	# 下载各种配置文件
-	if [ ! -d "$operatorFolder" ]; then
-		mkdir -p "$operatorFolder"
-	fi
 
-	cd "$operatorFolder"
-	#wget https://codeload.github.com/wwsbbase/wwsbbase_settings/zip/master
-	#unzip master
-	git clone https://github.com/wwsbbase/wwsbbase_settings.git
-
-	echo 'FetchConfigs end'
-	echo '----------------------------------'
-}
-
-function PythonEnvs()
-{
-	# pip 换源
-	mkdir $userFolder/.pip
-	sudo cp "${operatorFolder}wwsbbase_settings/pip.conf" $userFolder/.pip/pip.conf
-
-	sudo pip install virtualenvwrapper
-	sudo pip3 install virtualenvwrapper
-
-	mkdir $userFolder/.virtualenvs
-	echo "export WORKON_HOME=~/.virtualenvs" >> $userFolder/.bashrc
-	echo "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3" >> $userFolder/.bashrc
-	echo "source /usr/local/bin/virtualenvwrapper.sh" >> $userFolder/.bashrc
-}
-
+###
+# InstallZlua
+###
 function InstallZlua()
 {
 	echo '----------------------------------'
@@ -278,75 +275,9 @@ function InstallZlua()
 	echo '----------------------------------'
 }
 
-function SambaService()
+function OS_DoSettings()
 {
-	echo '----------------------------------'
-	echo 'SambaService begin'
-	sudo mv /etc/samba/smb.conf /etc/samba/smb_bak.conf
-
-	# 配置/etc/samba/smb.conf文件
-	# cd "${operatorFolder}wwsbbase_settings"
-	# sudo cp smb.conf /etc/samba/smb.conf
-	sudo cp "${operatorFolder}wwsbbase_settings/smb.conf" /etc/samba/smb.conf
-
-	if [ ! -d "$sambaFolder" ]; then
-		mkdir -p "$sambaFolder"
-	fi
-
-	sudo chown -R ${system_username}:${system_username} "$sambaFolder"
-	sudo smbpasswd -a ${system_username}
-
-	#设置开机自启动，编辑/etc/rc.local
-
-	#重新启动服务
-	sudo /etc/init.d/samba restart
-
-	echo 'SambaService end'
-	echo '----------------------------------'
-}
-
-function UserSetting()
-{
-	echo '########## UserSetting ##########'
-}
-
-function CentOS()
-{
-	echo '########## CentOS ##########'
-	########## BaseSetting ###########
-	BaseSetting
-	InstallBaseTools
-	FetchConfigs
-	############## Vim ################
-	BuildVim
-	BuildYcm
-	######### UserSetting #############
-	UserSetting
-	InstallZlua
-	############## Service ################
-	# SambaServic
-	InstallMariaDB
-}
-
-function CentOS_Lite()
-{
-	echo '########## CentOS_Lite ##########'
-	########## BaseSetting ###########
-	BaseSetting
-	InstallBaseTools
-	FetchConfigs
-	############## Vim ################
-	# BuildVim
-	# BuildYcm
-	######### UserSetting #############
-	UserSetting
-	InstallZlua	
-}
-
-function OneStepFunction()
-{
-	echo '########## OneStepFunction ##########'
-	echo ${operatorFolder}
+	InputHostNameAndUserName
 }
 
 function InputHostNameAndUserName()
@@ -391,17 +322,32 @@ function InputHostNameAndUserName()
 	echo ${operatorFolder}
 }
 
+function ALL_In_One()
+{
+	OS_DoSettings
+	OS_InstallTools
+	OS_SystemSetting
+	OS_OptimizePerformance
+	OS_ImproveSecurity
+
+}
+
+function OneStepFunction()
+{
+	echo '########## OneStepFunction ##########'
+	echo ${operatorFolder}
+}
+
 echo '#####		欢迎使用一键初始化Linux脚本^_^		#####'
 echo '#####									  	  #####'
-echo '#####		请使用 普通账号的sudo 进行初始化!!!	#####'
-echo '#####		请使用 普通账号的sudo 进行初始化!!!	#####'
-echo '#####		请使用 普通账号的sudo 进行初始化!!!	#####'
+echo '#####		请使用 Root 的进行初始化!!!			#####'
+echo '#####		请使用 Root 的进行初始化!!!			#####'
+echo '#####		请使用 Root 的进行初始化!!!			#####'
 echo '#####									      #####'
 echo '---------------------------------------------'
 echo '请选择系统:'
-echo "1) CentOS 7 X64"
-echo "2) CentOS 7 Lite X64"
-echo "3) OneStepFunction"
+echo "1) CentOS 7 X64 ALL_In_One"
+echo "2) OneStepFunction"
 echo "q) 退出"
 echo '----------------------------------'
 read -p ":" num
@@ -409,31 +355,11 @@ echo '----------------------------------'
 
 case $num in
 	1)
-		InputHostNameAndUserName
-
-		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
-		#法国（蓝白红）
-		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
-
-		CentOS
+		ALL_In_One
 		#setting $osip
 		exit
 	;;
 	2)
-		InputHostNameAndUserName
-		#法国（蓝白红）
-		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
-		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
-
-		CentOS_Lite
-		exit
-	;;
-	3)
-		InputHostNameAndUserName
-		#法国（蓝白红）
-		#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
-		setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
-
 		OneStepFunction
 		exit
 	;;
