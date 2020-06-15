@@ -1,12 +1,18 @@
 #!/bin/bash
 #####		一键初始化CentOS7		 #####
-#####		Update:2020-6-4			#####
+#####		Update:2020-6-12		#####
 
 system_hostname="defaut_hostname"
-system_username="defaut_user"
-setUserColor=""
+system_ssh_port="177"
 
-ssh_port="177"
+common_user_name="defaut_user"
+common_user_passwd="defaut_passwd"
+common_user_id="20000"
+common_group_name="defaut_group"
+
+common_user_color=""
+root_color=""
+
 
 ###
 # OS_SystemSetting
@@ -29,11 +35,25 @@ function OS_SystemSetting()
 	echo '----------------------------------'
 }
 
+function InputHostName()
+{
+	echo '-----------------------------'
+	echo '请输入HostName:'
+	echo '-----------------------------'
+	read -p ":" system_hostname
+	echo '-----------------------------'
+	echo '输入的HostName:'
+	echo '-----------------------------'
+	echo ${system_hostname}
+}
+
 ###
 # Set host name
 ###
 function SetHostname()
 {
+	InputHostName
+
 	hostnamectl set-hostname $system_hostname
 	echo "127.0.1.1   ${system_hostname}" >> /etc/hosts
 }
@@ -76,16 +96,6 @@ function SetHistory()
 	fi
 }
 
-###
-# Add normal user
-###
-function AddNormalUser()
-{
-	groupadd -g 20000 jesonc
-
-	useradd  -g jesonc -u 20000 -s /bin/bash -c "Dev user" -m -d /home/jesonc jesonc
-	echo jesonc.com | passwd --stdin jesonc
-}
 
 
 function OS_OptimizePerformance()
@@ -240,8 +250,79 @@ function InstallAdvanceTools()
 ###
 function OS_UserSetting()
 {
-	SetConsoleColor
-	InstallZlua
+	InitRoot
+
+	echo '-----------------------------'
+	echo '是否添加普通用户:'
+	echo '-----------------------------'
+	read -p ":" isAddNormalUser
+
+	if [isAddNormalUser =]
+	then
+		AddNormalUser
+	fi
+}
+
+
+###
+# Init Root
+###
+function InitRoot()
+{
+	SetConsoleColor root
+	InstallZlua	root
+}
+
+
+function InputUserName()
+{
+
+	echo '-----------------------------'
+	echo '请输入UserName:'
+	echo '-----------------------------'
+	read -p ":" common_user_name
+	echo '-----------------------------'
+	echo '输入的HostName:'
+	echo '-----------------------------'
+	echo ${common_user_name}
+
+	rootName="root"
+	if [ ${common_user_name} == ${rootName} ] 
+	then
+		userFolder="/root/"
+		operatorFolder="/root/download/"
+	else
+		userFolder="/home/${common_user_name}"
+		operatorFolder="/home/${common_user_name}/download/"
+	fi
+
+	echo '-----------------------------'
+	echo '当前用户目录为:'
+	echo '-----------------------------'
+	echo ${userFolder}
+
+	echo '-----------------------------'
+	echo '当前操作目录为:'
+	echo '-----------------------------'
+	echo ${operatorFolder}
+}
+
+###
+# Add Normal User
+###
+function AddNormalUser()
+{
+	## add normal user
+	InputUserName
+
+	groupadd -g ${common_user_id} ${common_group_name}
+	useradd  -g ${common_group_name} -u ${common_user_id} -s /bin/bash -c "Common User" -m -d /home/${common_user_name} ${common_user_name}
+	echo ${common_user_passwd} | passwd --stdin ${common_user_name}
+
+	## init normal user
+	SetConsoleColor ${common_user_name}
+	InstallZlua	${common_user_name}
+
 }
 
 ###
@@ -251,10 +332,10 @@ function SetConsoleColor()
 {
 	#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
 	#法国（蓝白红）
-	setUserColor="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+	common_user_color="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 
 	# set PS1
-	echo $setUserColor >> $userFolder/.bashrc
+	echo $common_user_color >> $userFolder/.bashrc
 	echo $setRootColor >> /root/.bashrc
 }
 
@@ -275,67 +356,27 @@ function InstallZlua()
 	echo '----------------------------------'
 }
 
-function OS_DoSettings()
+function OS_UserSettings()
 {
-	InputHostNameAndUserName
+
 }
 
-function InputHostNameAndUserName()
-{
-	echo '-----------------------------'
-	echo '请输入HostName:'
-	echo '-----------------------------'
-	read -p ":" system_hostname
-	echo '-----------------------------'
-	echo '输入的HostName:'
-	echo '-----------------------------'
-	echo ${system_hostname}
 
-
-	echo '-----------------------------'
-	echo '请输入UserName:'
-	echo '-----------------------------'
-	read -p ":" system_username
-	echo '-----------------------------'
-	echo '输入的HostName:'
-	echo '-----------------------------'
-	echo ${system_username}
-
-	rootName="root"
-	if [ ${system_username} == ${rootName} ] 
-	then
-		userFolder="/root/"
-		operatorFolder="/root/download/"
-	else
-		userFolder="/home/${system_username}"
-		operatorFolder="/home/${system_username}/download/"
-	fi
-
-	echo '-----------------------------'
-	echo '当前用户目录为:'
-	echo '-----------------------------'
-	echo ${userFolder}
-
-	echo '-----------------------------'
-	echo '当前操作目录为:'
-	echo '-----------------------------'
-	echo ${operatorFolder}
-}
 
 function ALL_In_One()
 {
-	OS_DoSettings
 	OS_InstallTools
+
+	OS_UserSettings
 	OS_SystemSetting
+
 	OS_OptimizePerformance
 	OS_ImproveSecurity
-
 }
 
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
-	echo ${operatorFolder}
 }
 
 echo '#####		欢迎使用一键初始化Linux脚本^_^		#####'
