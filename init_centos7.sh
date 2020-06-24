@@ -1,18 +1,23 @@
 #!/bin/bash
 #####		一键初始化CentOS7		 #####
-#####		Update:2020-6-12		#####
+#####		Update:2020-6-24		#####
 
 system_hostname="defaut_hostname"
-system_ssh_port="177"
+system_ssh_port=177
 
+root_name="root"
 common_user_name="defaut_user"
 common_user_passwd="defaut_passwd"
 common_user_id="20000"
 common_group_name="defaut_group"
 
-common_user_color=""
-root_color=""
+#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
+#法国（蓝白红）
+common_user_color="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
+root_color="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;37m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
 
+package_folder="/download"
+yes_name="yes"
 
 ###
 # OS_SystemSetting
@@ -22,7 +27,7 @@ function OS_SystemSetting()
 	echo '----------------------------------'
 	echo 'OS_SystemSetting begin'
 	########## Base Setting ###########
-	SetHostname
+	# SetHostname
 	########## Advance  Setting ###########
 
 	# ChangeIntelP_state
@@ -103,6 +108,7 @@ function OS_OptimizePerformance()
 	CloseSelinxServices
 	CloseUnusefulServices
 	SysctlConfig
+	SetSSHConfig
 }
 
 ###
@@ -164,33 +170,14 @@ fi
 sysctl -p
 }
 
-function OS_ImproveSecurity()
-{
-	SetPublicKey
-	SetSSHConfig
-}
-
-###
-# Public key
-###
-function SetPublicKey()
-{
-	mkdir /root/.ssh
-	pub_key='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAEAQC5aglM/I6PjJd6pZBz/h5bUXaiP74CwuqFjVwx+VdEs1DYg6WcvtgNyOMUVuw4Vv9CaCZy/EccRAdBsE9EsdDMmwp9ljK9CcsYGwMM9tVgqG0v0DtqF/4yiSDKFIHHDZLs9PFgPvTX17MxJRFWXZD0lOCYHvepDTOPeUT2VRrWjfMvch97VcGSTeBxgd9gtcul9JQnwhWJjQyVtGdu0s21hn259xykbWfQCa2snW9svaPA0ZvnxODak67PSBb55kz5MI6TUggg58mt+EIAhRYbgun+tP/JWIF0QJ5HKFhh27+Ow8CQoyOBfEGrqSXyLqepgMBIT6qrrdSaiMARdqll5OYCaQ/ZnqbCE17G4OzmMziSceV1WidyyipHT6UqBq2Ug2eh/77dIYeRO/9YzR0KtrQcAAUe0YsZHkB93ivsvSGJNECdJyRDsHpQBQJzXKb19dmmPpleY5iOt8W1MX/Q+F51k6Tk7DOZLa7L+z27QP+ooSyZle8JcWY2MUmAqXTunabT7M5K5GwH35OX/eClKJUzQFfdawx15wj/CdHuj9YRgDycDrE/8SWIYEXdS5EdrAy+UeQ+k24auj/XoWaHAXSoubOghFY9DZ5/u1ZKW2aJx/ZZMcYFTK2Isz1CpRsm+Fc0jvQtN82Q1o6nL54RC+iom+TxeBsvnHZibnJe6Ij71KvmrmpbbJ8L8XJjrPWF0/FtnM3oxWES2U4Dh/Pt6o7cloDw5Ve+LfTvszd2hoPKGsm6qnXjysHMvweqZNJIWn8Rlgy2HITu0iF/PP9DeB6yfsQ/paHCR+i6rLfvs/hJwxJCtRaiije2uUL/i90YwKKzn/GmlJ9IoqUlF33Zt2apdJI2RTu5tNuNhCu1kezVgc3EK2LjmRN4SAKkxcjWRS0PGRX/d6BWb7eROb8qz4S+w62QbK0nCRK5OQeCrhyioc1mVdSWdlpbci0yTS3whB1LFQve3my1cdOVHZCHj1WaqxKX1qimOkgr8DXnhne2AgpmuNYT7TXekdWv27ZwoM4mx7uwhGuGXlEEPJD8bf3oqS7EKhTEAuwXd+jctapPpbIRQrd8v/MaekZas8BVfVnqiO6G3yiEEW0uHXWznMglC8IPGpiUtke4RD/sKseej7D/FDfVY80hzdPDqpVyhJG308RoT10jNLcJn3MtVWGXXF2UeO2/2ZGrOYtQhQzDdjnCB9i5NqZSvKCWOPZQFAYcJBP037hB+20KF7o4GNo0qcmRT0JRMUab5v3erOnEsccsS0DlD5PQ2kFnKNAB/02Q+5csNrVZL4zcwwl8j7w7wq0q6qiP9SdXbeFDAKwiY0D18yQjA5mxS76WnbZsQAtIJR4hdLCDvdr3e6NJ common_key'
-	echo $pub_key >> /root/.ssh/authorized_keys
-	chmod 700 /root/.ssh
-	chmod 600 /root/.ssh/authorized_keys
-	chown -R root:root /root/.ssh
-}
-
 ###
 # ssh config
 ###
 function SetSSHConfig()
 {
-	/bin/sed -i 's/.*Port[[:space:]].*$/Port 9922/' /etc/ssh/ssh_config
-	/bin/sed -i 's/.*Port[[:space:]].*$/Port 9922/' /etc/ssh/sshd_config
-	/bin/sed -i 's/port=\"22\"/port=\"9922\"/' /usr/lib/firewalld/services/ssh.xml 
+	/bin/sed -i "s/.*Port[[:space:]].*$/Port ${system_ssh_port}/" /etc/ssh/ssh_config
+	/bin/sed -i "s/.*Port[[:space:]].*$/Port ${system_ssh_port}/" /etc/ssh/sshd_config
+	/bin/sed -i "s/port=\"22\"/port=\"${system_ssh_port}\"/" /usr/lib/firewalld/services/ssh.xml 
 	firewall-cmd --reload
 }
 
@@ -248,21 +235,29 @@ function InstallAdvanceTools()
 ###
 # User Settings
 ###
-function OS_UserSetting()
+function OS_UserSettings()
 {
+	CheckPackageFoder
 	InitRoot
 
 	echo '-----------------------------'
-	echo '是否添加普通用户:'
+	echo '是否添加普通用户:(yes/no)'
 	echo '-----------------------------'
 	read -p ":" isAddNormalUser
 
-	if [isAddNormalUser =]
+	if [ $isAddNormalUser = $yes_name ]
 	then
 		AddNormalUser
 	fi
 }
 
+function CheckPackageFoder()
+{
+	if [ ! -e "${package_folder}" ]
+	then
+		mkdir ${package_folder}
+	fi
+}
 
 ###
 # Init Root
@@ -271,40 +266,40 @@ function InitRoot()
 {
 	SetConsoleColor root
 	InstallZlua	root
+	SetPublicKey root
 }
 
-
-function InputUserName()
+function InputUserInfo()
 {
+	### 请输入GroupName
+	echo '-----------------------------'
+	echo '请输入GroupName:'
+	echo '-----------------------------'
+	read -p ":" common_group_name
+	echo '-----------------------------'
+	echo '输入的GroupName:'
+	echo '-----------------------------'
+	echo ${common_group_name}
 
+	### 请输入UserName
 	echo '-----------------------------'
 	echo '请输入UserName:'
 	echo '-----------------------------'
 	read -p ":" common_user_name
 	echo '-----------------------------'
-	echo '输入的HostName:'
+	echo '输入的UserName:'
 	echo '-----------------------------'
 	echo ${common_user_name}
 
-	rootName="root"
-	if [ ${common_user_name} == ${rootName} ] 
-	then
-		userFolder="/root/"
-		operatorFolder="/root/download/"
-	else
-		userFolder="/home/${common_user_name}"
-		operatorFolder="/home/${common_user_name}/download/"
-	fi
-
+	### 请输入UserPasswd
 	echo '-----------------------------'
-	echo '当前用户目录为:'
+	echo '请输入UserPasswd:'
 	echo '-----------------------------'
-	echo ${userFolder}
-
+	read -p ":" common_user_passwd
 	echo '-----------------------------'
-	echo '当前操作目录为:'
+	echo '输入的UserPasswd:'
 	echo '-----------------------------'
-	echo ${operatorFolder}
+	echo ${common_user_passwd}
 }
 
 ###
@@ -313,7 +308,7 @@ function InputUserName()
 function AddNormalUser()
 {
 	## add normal user
-	InputUserName
+	InputUserInfo
 
 	groupadd -g ${common_user_id} ${common_group_name}
 	useradd  -g ${common_group_name} -u ${common_user_id} -s /bin/bash -c "Common User" -m -d /home/${common_user_name} ${common_user_name}
@@ -323,6 +318,7 @@ function AddNormalUser()
 	SetConsoleColor ${common_user_name}
 	InstallZlua	${common_user_name}
 
+	SetPublicKey ${common_user_name} ${common_group_name}
 }
 
 ###
@@ -330,13 +326,14 @@ function AddNormalUser()
 ###
 function SetConsoleColor()
 {
-	#30:黑色; 31:红色; 32:绿色; 33:黄色; 34:蓝色; 35:紫色; 36:青色; 37:白色
-	#法国（蓝白红）
-	common_user_color="export PS1=\"\n\e[1;37m[\e[m\e[1;34m\u\e[m\e[1;30m@\e[m\e[1;31m\H\e[m \e[4m\w\e[m\e[1;37m]\e[m\e[1;36m\e[m\n\$\""
-
 	# set PS1
-	echo $common_user_color >> $userFolder/.bashrc
-	echo $setRootColor >> /root/.bashrc
+	echo $1
+	if [ $1 = $root_name ]
+	then
+		echo $root_color >> /root/.bashrc
+	else
+		echo $common_user_color >> /home/$1/.bashrc
+	fi
 }
 
 
@@ -347,21 +344,62 @@ function InstallZlua()
 {
 	echo '----------------------------------'
 	echo 'InstallZlua begin'
-	cd "$operatorFolder"
-	git clone https://github.com/skywind3000/z.lua.git
 
-	echo "eval \"\$(lua $operatorFolder/z.lua/z.lua --init bash enhanced once)\"" >> $userFolder/.bashrc
+	cd "$package_folder"
+	if [ ! -e "${package_folder}/z.lua/" ]
+	then
+		git clone https://github.com/skywind3000/z.lua.git
+	fi
+	
+	echo $1
+	local bashrc_path=""
+	if [ $1 = $root_name ]
+	then
+		bashrc_path="/root/.bashrc"
+		# echo "eval \"\$(lua $package_folder/z.lua/z.lua --init bash enhanced once)\"" >> /root/.bashrc
+	else
+		echo $common_user_color >> /home/$1/.bashrc
+		bashrc_path="/home/$1/.bashrc"
+		# echo "eval \"\$(lua $package_folder/z.lua/z.lua --init bash enhanced once)\"" >> /home/$1/.bashrc
+	fi
+
+	echo "eval \"\$(lua $package_folder/z.lua/z.lua --init bash enhanced once)\"" >> $bashrc_path
 
 	echo 'InstallZlua end'
 	echo '----------------------------------'
 }
 
-function OS_UserSettings()
+###
+# Public key
+###
+function SetPublicKey()
 {
+	local ssh_dir=""
+	if [ $1 = $root_name ]
+	then
+		echo $root_color >> /root/.bashrc
+		ssh_dir="/root/.ssh"
+	else
+		ssh_dir="/home/$1/.ssh"
+	fi
 
+	if [ ! -e "${ssh_dir}" ]
+	then
+		mkdir ${ssh_dir}
+	fi
+
+	pub_key='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAEAQC5aglM/I6PjJd6pZBz/h5bUXaiP74CwuqFjVwx+VdEs1DYg6WcvtgNyOMUVuw4Vv9CaCZy/EccRAdBsE9EsdDMmwp9ljK9CcsYGwMM9tVgqG0v0DtqF/4yiSDKFIHHDZLs9PFgPvTX17MxJRFWXZD0lOCYHvepDTOPeUT2VRrWjfMvch97VcGSTeBxgd9gtcul9JQnwhWJjQyVtGdu0s21hn259xykbWfQCa2snW9svaPA0ZvnxODak67PSBb55kz5MI6TUggg58mt+EIAhRYbgun+tP/JWIF0QJ5HKFhh27+Ow8CQoyOBfEGrqSXyLqepgMBIT6qrrdSaiMARdqll5OYCaQ/ZnqbCE17G4OzmMziSceV1WidyyipHT6UqBq2Ug2eh/77dIYeRO/9YzR0KtrQcAAUe0YsZHkB93ivsvSGJNECdJyRDsHpQBQJzXKb19dmmPpleY5iOt8W1MX/Q+F51k6Tk7DOZLa7L+z27QP+ooSyZle8JcWY2MUmAqXTunabT7M5K5GwH35OX/eClKJUzQFfdawx15wj/CdHuj9YRgDycDrE/8SWIYEXdS5EdrAy+UeQ+k24auj/XoWaHAXSoubOghFY9DZ5/u1ZKW2aJx/ZZMcYFTK2Isz1CpRsm+Fc0jvQtN82Q1o6nL54RC+iom+TxeBsvnHZibnJe6Ij71KvmrmpbbJ8L8XJjrPWF0/FtnM3oxWES2U4Dh/Pt6o7cloDw5Ve+LfTvszd2hoPKGsm6qnXjysHMvweqZNJIWn8Rlgy2HITu0iF/PP9DeB6yfsQ/paHCR+i6rLfvs/hJwxJCtRaiije2uUL/i90YwKKzn/GmlJ9IoqUlF33Zt2apdJI2RTu5tNuNhCu1kezVgc3EK2LjmRN4SAKkxcjWRS0PGRX/d6BWb7eROb8qz4S+w62QbK0nCRK5OQeCrhyioc1mVdSWdlpbci0yTS3whB1LFQve3my1cdOVHZCHj1WaqxKX1qimOkgr8DXnhne2AgpmuNYT7TXekdWv27ZwoM4mx7uwhGuGXlEEPJD8bf3oqS7EKhTEAuwXd+jctapPpbIRQrd8v/MaekZas8BVfVnqiO6G3yiEEW0uHXWznMglC8IPGpiUtke4RD/sKseej7D/FDfVY80hzdPDqpVyhJG308RoT10jNLcJn3MtVWGXXF2UeO2/2ZGrOYtQhQzDdjnCB9i5NqZSvKCWOPZQFAYcJBP037hB+20KF7o4GNo0qcmRT0JRMUab5v3erOnEsccsS0DlD5PQ2kFnKNAB/02Q+5csNrVZL4zcwwl8j7w7wq0q6qiP9SdXbeFDAKwiY0D18yQjA5mxS76WnbZsQAtIJR4hdLCDvdr3e6NJ common_key'
+	echo $pub_key >> ${ssh_dir}/authorized_keys
+	chmod 700 ${ssh_dir}
+	chmod 600 ${ssh_dir}/authorized_keys
+
+	if [ $1 = $root_name ]
+	then
+		chown -R root:root ${ssh_dir}
+	else
+		chown -R $1:$2 ${ssh_dir}
+	fi
 }
-
-
 
 function ALL_In_One()
 {
@@ -371,12 +409,23 @@ function ALL_In_One()
 	OS_SystemSetting
 
 	OS_OptimizePerformance
-	OS_ImproveSecurity
 }
 
 function OneStepFunction()
 {
 	echo '########## OneStepFunction ##########'
+	# OS_InstallTools
+
+	#OS_UserSettings
+	#OS_SystemSetting
+
+	#OS_OptimizePerformance
+}
+
+function CheckRoot()
+{
+	#Only root
+	[[ $EUID -ne 0 ]] && echo 'Error: This script must be run as root!' && exit 1
 }
 
 echo '#####		欢迎使用一键初始化Linux脚本^_^		#####'
@@ -385,6 +434,7 @@ echo '#####		请使用 Root 的进行初始化!!!			#####'
 echo '#####		请使用 Root 的进行初始化!!!			#####'
 echo '#####		请使用 Root 的进行初始化!!!			#####'
 echo '#####									      #####'
+CheckRoot
 echo '---------------------------------------------'
 echo '请选择系统:'
 echo "1) CentOS 7 X64 ALL_In_One"
