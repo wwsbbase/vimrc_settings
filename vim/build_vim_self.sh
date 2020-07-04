@@ -29,6 +29,7 @@ build_failed=0
 build_step_0_init_info=0
 build_step_1_install_tools=0
 build_step_2_unpackage=0
+build_step_2_update_package=1
 build_step_3_install_vim_tools=0
 build_step_4_complite_vim=0
 build_step_5_install_vim=0
@@ -130,6 +131,21 @@ function UnPackage()
 		if [ -d "${operatorFolder}/${vim_package_name}" ];then
 			build_step_2_unpackage=${build_success}
 			echo "解压完成"
+
+			if [ ${build_step_2_update_package} -eq ${build_success} ]
+			then
+				echo "UpdatePackage skip"
+				return 0
+			else
+				cd "${operatorFolder}/${vim_package_name}/vim/"
+				git pull
+
+				cd "${operatorFolder}/${vim_package_name}/YouCompleteMe/"
+				git pull
+
+				echo "UpdatePackage success"
+			fi
+
 		else
 			echo "解压失败"
 		fi
